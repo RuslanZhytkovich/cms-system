@@ -1,6 +1,5 @@
 import re
 import uuid
-
 from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr, validator
 
@@ -12,6 +11,17 @@ class TunedModel(BaseModel):
         """tells pydantic to convert even non dict obj to json"""
 
         orm_mode = True
+
+        #TODO: Replace to better place
+
+
+class BaseUser(TunedModel):
+    email: EmailStr
+    password: str
+
+
+class UserCreateRequest(BaseUser):              # for creating an account using registration
+    pass
 
 
 class UserCreate(BaseModel):
