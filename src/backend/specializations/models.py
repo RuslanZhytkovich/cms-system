@@ -1,6 +1,8 @@
 
+
 from sqlalchemy import Column, String, Integer, Boolean
 from sqlalchemy.orm import relationship
+
 from src.backend.core.db import Base
 
 

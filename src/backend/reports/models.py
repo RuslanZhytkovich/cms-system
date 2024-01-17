@@ -1,7 +1,7 @@
 from sqlalchemy import Float
-from sqlalchemy import Column, String, Integer, ForeignKey, Date
 from sqlalchemy.sql import func
-from src.backend.core.db import Base
+
+from src.backend.users.models import *
 
 
 class Report(Base):

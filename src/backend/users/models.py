@@ -1,9 +1,10 @@
-
 from enum import Enum
+
 from sqlalchemy import Enum as SQLAlchemyEnum, Column, String, Integer, Boolean, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from src.backend.core.db import Base
+from src.backend.reports.models import Report
 
 
 class RoleEnum(str, Enum):
@@ -28,6 +29,7 @@ class User(Base):
     deleted = Column(Boolean, default=False)
 
     specialization_id = Column(Integer, ForeignKey('specializations.specialization_id'))
+
 
     projects = relationship('Project', secondary='project_users', back_populates='users')
     reports = relationship("Report", backref='user')

@@ -1,11 +1,11 @@
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.testing.pickleable import User
+
 
 from src.backend.auth.hashing import Hasher
 from src.backend.core.exceptions import DatabaseException
 from src.backend.users.schemas import UserCreateRequest
-from src.backend.users.models import User, RoleEnum
+from src.backend.users.models import User
 
 
 class UserDBController:

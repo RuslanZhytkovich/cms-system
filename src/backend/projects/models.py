@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, func, Date
 from sqlalchemy.orm import relationship
+
 from src.backend.core.db import Base
 
 
@@ -14,4 +15,3 @@ class Project(Base):
     deleted = Column(Boolean, default=False)
 
     users = relationship('User', secondary='project_users', back_populates='projects')
-
