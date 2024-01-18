@@ -48,7 +48,4 @@ class UserCreate(BaseModel):
 
 class ShowUser(TunedModel):
     user_id: uuid.UUID
-    name: str
-    surname: str
     email: EmailStr
-    is_active: bool
