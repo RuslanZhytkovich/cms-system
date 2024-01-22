@@ -3,6 +3,7 @@ import uvicorn
 from fastapi.routing import APIRouter
 
 from src.backend.customers.views import customer_router
+from src.backend.specializations.views import specialization_router
 from src.backend.users.views import user_router
 
 # create instance of the app
@@ -17,7 +18,7 @@ main_api_router = APIRouter()
 # set routes to the app instance
 main_api_router.include_router(user_router, prefix="/users", tags=["users"])
 main_api_router.include_router(customer_router, prefix="/customers", tags=["customers"])
-
+main_api_router.include_router(specialization_router, prefix='/specializations', tags=["specializations"])
 app.include_router(main_api_router)
 
 if __name__ == "__main__":
