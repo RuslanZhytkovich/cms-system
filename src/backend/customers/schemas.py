@@ -1,17 +1,26 @@
 from pydantic import BaseModel
 
 
-class CustomerBase(BaseModel):
+class BaseCustomer(BaseModel):
     customer_name: str
-    deleted: bool
-
-
-class CustomerCreate(CustomerBase):
-    pass
-
-
-class CustomerGetResponse(CustomerBase):
-    customer_id: int
+    is_deleted: bool = False
 
     class Config:
         orm_mode = True
+
+
+class ShowCustomer(BaseCustomer):
+    customer_id: int
+
+
+class CreateCustomer(BaseCustomer):
+    pass
+
+
+class UpdateCustomer(BaseCustomer):
+    pass
+
+
+
+
+

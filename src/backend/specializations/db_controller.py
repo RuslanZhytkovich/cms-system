@@ -1,6 +1,5 @@
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from src.backend.core.exceptions import DatabaseException
 from src.backend.specializations.models import Specialization
 from src.backend.specializations.schemas import CreateSpecialization, UpdateSpecialization
@@ -10,8 +9,7 @@ class SpecializationDBController:
     @staticmethod
     async def get_all_specializations(db: AsyncSession):
         try:
-            query = select(Specialization)
-            specialization = await db.execute(query)
+            specialization = await db.execute(select(Specialization))
             return specialization.scalars().all()
         except Exception as e:
             raise DatabaseException(str(e))
