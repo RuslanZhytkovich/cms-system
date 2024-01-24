@@ -26,3 +26,15 @@ The following step is to make migrations:
 alembic revision --autogenerate -m "comment"
 alembic upgrade heads
 ---
+
+To run testing change directory to tests: 
+
+---
+cd src/backend/tests
+---
+
+And then write: 
+
+---
+pytest
+---
