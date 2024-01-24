@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -5,16 +6,31 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.backend.users.db_controller import UserDBController
 from src.backend.core.db import get_db
 from src.backend.users.services import UserService
-from src.backend.users.schemas import ShowUser, UserCreateRequest
+from src.backend.users.schemas import ShowUser, CreateUserFullData, UpdateUser
 
 user_router = APIRouter()
 
 
-@user_router.get("/all", response_model=List[ShowUser])
+@user_router.get("/get_all", response_model=List[ShowUser])
 async def get_all_users(db: AsyncSession = Depends(get_db)):
-    return await UserService.get_all_users_service(db)
+    return await UserService.get_all_users_service(db=db)
 
 
-@user_router.post('/create_user')
-async def create_user(user: UserCreateRequest, db: AsyncSession = Depends(get_db)):
-    return await UserDBController.create_user(user, db)
+@user_router.get("/get_by_id", response_model=ShowUser)
+async def get_user_by_id(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    return await UserService.get_user_by_id(user_id=user_id, db=db)
+
+
+@user_router.delete("/delete")
+async def delete_user_by_id(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    return await UserService.delete_user_by_id(user_id=user_id, db=db)
+
+
+@user_router.patch("/update")
+async def update_user_by_id(user_id: uuid.UUID, user: UpdateUser, db: AsyncSession = Depends(get_db)):
+    return await UserService.update_user_by_id(user_id=user_id, user=user,db=db)
+
+
+@user_router.post('/create')
+async def create_user(new_user: CreateUserFullData, db: AsyncSession = Depends(get_db)):
+    return await UserService.create_user(new_user=new_user, db=db)

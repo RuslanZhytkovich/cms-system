@@ -1,17 +1,11 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
-from enum import Enum
 from sqlalchemy import Enum as SQLAlchemyEnum, Column, String, Integer, Boolean, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from src.backend.core.db import Base
+from src.backend.users.enums import RoleEnum
 from src.backend.reports.models import Report
-
-
-class RoleEnum(str, Enum):
-    admin = 'admin'
-    manager = 'manager'
-    developer = 'developer'
 
 
 class User(Base):
@@ -25,7 +19,7 @@ class User(Base):
     role = Column(SQLAlchemyEnum(RoleEnum), nullable=False, default=RoleEnum.developer)
     telegram = Column(String, nullable=True, unique=False)
     phone_number = Column(String, nullable=True, unique=False)
-    bench = Column(Boolean, default=False)
+    on_bench = Column(Boolean, default=False)
     time_created = Column(Date, server_default=func.now(), nullable=False)
     last_login = Column(Date, server_default=func.now(), nullable=False)
     is_active = Column(Boolean, default=True)

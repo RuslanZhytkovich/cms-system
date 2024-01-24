@@ -1,15 +1,28 @@
-from sqlalchemy import Float
-from sqlalchemy.sql import func
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.backend.core.db import get_db
+from src.backend.reports.db_controller import ReportDBController
+from src.backend.reports.schemas import UpdateReport, CreateReport
 
 
+class ReportService:
+    @staticmethod
+    async def get_all_reports_service(db: AsyncSession = Depends(get_db)):
+        return await ReportDBController.get_all_reports(db=db)
 
+    @staticmethod
+    async def get_report_by_id(report_id: int, db: AsyncSession = Depends(get_db)):
+        return await ReportDBController.get_report_by_id(report_id=report_id, db=db)
 
-class Report(Base):
-    __tablename__ = "reports"
+    @staticmethod
+    async def delete_report_by_id(report_id: int, db: AsyncSession = Depends(get_db)):
+        return await ReportDBController.delete_report_by_id(report_id=report_id, db=db)
 
-    id = Column(Integer, autoincrement=True, primary_key=True, index=True)
-    date = Column(Date, server_default=func.now(), nullable=True)
-    hours = Column(Float, nullable=False)
-    comment = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    project_id = Column(Integer, ForeignKey('projects.id'))
+    @staticmethod
+    async def update_report_by_id(report_id: int, report: UpdateReport, db: AsyncSession = Depends(get_db)):
+        return await ReportDBController.update_report_by_id(report_id=report_id, report=report, db=db)
+
+    @staticmethod
+    async def create_report(new_report: CreateReport, db: AsyncSession = Depends(get_db)):
+        return await ReportDBController.create_report(new_report=new_report, db=db)
