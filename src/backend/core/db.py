@@ -13,8 +13,12 @@ except Exception:
 
 
 async def get_db() -> AsyncSession:
-    async with async_session() as session:
-        yield session
+    try:
+        async with async_session() as session:
+            yield session
+    finally:
+        await session.close()
+
 
 
 class Base(DeclarativeBase):
