@@ -24,6 +24,16 @@ services:
       - "5433:5432"
     networks:
       - custom
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - 6379:6379
+
+
+volumes:
+    cms_app:
+
 networks:
   custom:
     driver: bridge
