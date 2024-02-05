@@ -10,20 +10,18 @@ services:
       - POSTGRES_DB=postgres
     ports:
       - "5432:5432"
-    networks:
-      - custom
-  db_test:
-    container_name: "db_test"
-    image: postgres:14.1-alpine
+
+  test-db:
+    container_name: "test-db"
+    image: postgres:15.3
     restart: always
     environment:
-      - POSTGRES_USER=postgres_test
-      - POSTGRES_PASSWORD=postgres_test
-      - POSTGRES_DB=postgres_test
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cms_db
     ports:
       - "5433:5432"
-    networks:
-      - custom
+
   redis:
     image: redis:7
     container_name: redis
@@ -34,6 +32,3 @@ services:
 volumes:
     cms_app:
 
-networks:
-  custom:
-    driver: bridge

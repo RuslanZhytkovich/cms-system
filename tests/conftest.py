@@ -22,7 +22,7 @@ def event_loop():
 
 @pytest.fixture(scope="session")
 def engine():
-    db_url = "postgresql+asyncpg://postgres_test:postgres_test@localhost:5433/postgres_test"
+    db_url = "postgresql+asyncpg://postgres:password@localhost:5433/cms_db"
     engine = create_async_engine(db_url)
     yield engine
     engine.sync_engine.dispose()
