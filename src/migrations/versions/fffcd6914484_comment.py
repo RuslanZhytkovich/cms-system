@@ -1,8 +1,8 @@
-"""added is_deleted 
+"""comment
 
-Revision ID: ce5d92c79f93
+Revision ID: fffcd6914484
 Revises: 
-Create Date: 2024-02-06 17:52:29.479670
+Create Date: 2024-02-06 18:29:31.241708
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ce5d92c79f93'
+revision = 'fffcd6914484'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -36,8 +36,8 @@ def upgrade() -> None:
     op.create_table('projects',
     sa.Column('project_id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('project_name', sa.String(), nullable=False),
-    sa.Column('start_date', sa.Date(), server_default=sa.text('now()'), nullable=True),
-    sa.Column('end_date', sa.Date(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('start_date', sa.Date(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('end_date', sa.Date(), server_default=sa.text('now()'), nullable=False),
     sa.Column('is_finished', sa.Boolean(), nullable=True),
     sa.Column('is_deleted', sa.Boolean(), nullable=True),
     sa.Column('customer_id', sa.Integer(), nullable=True),
@@ -74,7 +74,7 @@ def upgrade() -> None:
     )
     op.create_table('reports',
     sa.Column('report_id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('date', sa.Date(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('date', sa.Date(), server_default=sa.text('now()'), nullable=False),
     sa.Column('hours', sa.Float(), nullable=False),
     sa.Column('comment', sa.String(), nullable=False),
     sa.Column('user_id', sa.UUID(), nullable=True),

@@ -1,6 +1,7 @@
+import datetime
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Enum as SQLAlchemyEnum, Column, String, Integer, Boolean, ForeignKey, Date
+from sqlalchemy import Enum as SQLAlchemyEnum, Column, String, Integer, Boolean, ForeignKey, Date, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from core.db import Base
