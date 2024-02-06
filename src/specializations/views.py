@@ -44,6 +44,14 @@ async def update_specialization_by_id(specialization_id: int, specialization: Up
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@specialization_router.patch("/soft_delete", status_code=status.HTTP_200_OK)
+async def soft_delete_specialization(specialization_id: int, db: AsyncSession = Depends(get_db)):
+    try:
+        return await SpecializationService.soft_delete_specialization(specialization_id=specialization_id, db=db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @specialization_router.post("/create", response_model=ShowSpecialization)
 async def create_specialization(new_specialization: CreateSpecialization, db: AsyncSession = Depends(get_db)):
     try:

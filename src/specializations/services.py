@@ -27,5 +27,9 @@ class SpecializationService:
                                                                             db=db)
 
     @staticmethod
+    async def soft_delete_specialization(specialization_id: int, db: AsyncSession = Depends(get_db)):
+        return await SpecializationDBController.soft_delete(specialization_id=specialization_id, db=db)
+
+    @staticmethod
     async def create_specialization(new_specialization: CreateSpecialization, db: AsyncSession = Depends(get_db)):
         return await SpecializationDBController.create_specialization(new_specialization=new_specialization, db=db)

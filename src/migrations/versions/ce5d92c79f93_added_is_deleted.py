@@ -1,21 +1,19 @@
-"""
+"""added is_deleted 
 
-Revision ID: ce26d0392601
+Revision ID: ce5d92c79f93
 Revises: 
-Create Date: 2024-01-23 21:12:43.711325
+Create Date: 2024-02-06 17:52:29.479670
 
 """
-from typing import Sequence, Union
-
 from alembic import op
 import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'ce26d0392601'
-down_revision: Union[str, None] = None
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+revision = 'ce5d92c79f93'
+down_revision = None
+branch_labels = None
+depends_on = None
 
 
 def upgrade() -> None:
@@ -81,6 +79,7 @@ def upgrade() -> None:
     sa.Column('comment', sa.String(), nullable=False),
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('project_id', sa.Integer(), nullable=True),
+    sa.Column('is_deleted', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['project_id'], ['projects.project_id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.user_id'], ),
     sa.PrimaryKeyConstraint('report_id')

@@ -27,7 +27,7 @@ class CreateUserFullData(BaseUser):
     on_bench: bool = False
     time_created: date
     last_login: date
-    is_active: bool = False
+    is_active: bool = True
     specialization_id: int
 
 

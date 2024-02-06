@@ -54,3 +54,20 @@ class UserDBController:
             return updated
         except Exception as e:
             raise DatabaseException(str(e))
+
+    @staticmethod
+    async def soft_delete(user_id: uuid.UUID, db: AsyncSession):
+        try:
+            query = (
+                update(User)
+                .where(User.user_id == user_id)
+                .values(is_active=False)
+                .returning(User)
+            )
+            result = await db.execute(query)
+            updated = result.scalar()
+            await db.commit()
+            return updated
+
+        except Exception:
+            raise DatabaseException

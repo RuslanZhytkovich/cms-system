@@ -30,6 +30,11 @@ async def update_user_by_id(user_id: uuid.UUID, user: UpdateUser, db: AsyncSessi
     return await UserService.update_user_by_id(user_id=user_id, user=user,db=db)
 
 
+@user_router.patch("/soft_delete")
+async def update_user_by_id(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    return await UserService.soft_delete_user(user_id=user_id,db=db)
+
+
 @user_router.post('/create')
 async def create_user(new_user: CreateUserFullData, db: AsyncSession = Depends(get_db)):
     return await UserService.create_user(new_user=new_user, db=db)

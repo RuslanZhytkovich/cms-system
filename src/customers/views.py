@@ -43,6 +43,14 @@ async def update_customer_by_id(customer_id: int, customer: UpdateCustomer, db: 
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@customer_router.patch("/soft_delete", status_code=status.HTTP_200_OK)
+async def update_customer_by_id(customer_id: int, db: AsyncSession = Depends(get_db)):
+    try:
+        return await CustomerService.soft_delete_customer(customer_id=customer_id, db=db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @customer_router.post("/create", response_model=ShowCustomer)
 async def create_customer(new_customer: CreateCustomer, db: AsyncSession = Depends(get_db)):
     try:

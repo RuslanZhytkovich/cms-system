@@ -7,10 +7,10 @@ from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
 from core.base import Base
 from core.db import get_db
-from core.settings import TEST_DB_URL, DB_URL
+from core.settings import SETTINGS
 from main import app
 
-engine_test = create_async_engine(TEST_DB_URL, poolclass=NullPool)
+engine_test = create_async_engine(SETTINGS.TEST_DB_URL, poolclass=NullPool)
 async_session_maker = sessionmaker(engine_test, class_=AsyncSession, expire_on_commit=False)
 Base.metadata.bind = engine_test
 

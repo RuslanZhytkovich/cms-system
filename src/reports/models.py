@@ -1,4 +1,4 @@
-from sqlalchemy import Float, UUID
+from sqlalchemy import Float, UUID, Boolean
 from sqlalchemy import Column, String, Integer, ForeignKey, Date
 from sqlalchemy.sql import func
 from core.db import Base
@@ -12,3 +12,4 @@ class Report(Base):
     comment = Column(String, nullable=False)
     user_id = Column(UUID(as_uuid=True), ForeignKey('users.user_id'))
     project_id = Column(Integer, ForeignKey('projects.project_id'))
+    is_deleted = Column(Boolean, default=False)

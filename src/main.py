@@ -1,3 +1,5 @@
+import subprocess
+
 from fastapi import FastAPI
 import uvicorn
 from fastapi.routing import APIRouter
@@ -23,4 +25,11 @@ main_api_router.include_router(specialization_router, prefix='/specializations',
 app.include_router(main_api_router)
 
 
+@app.on_event("startup")
+async def before_startup():
+    subprocess.run(["alembic", "upgrade", "heads"])
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=8000)
 

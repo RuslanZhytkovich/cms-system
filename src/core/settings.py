@@ -1,16 +1,13 @@
-from envparse import Env
+from dotenv import load_dotenv
+from pydantic import BaseSettings
 
-env = Env()
-
-DB_URL = env.str("REAL_DATABASE_URL",
-                 default="postgresql+asyncpg://postgres:postgres@localhost:5432/postgres",
-                 )
+load_dotenv()
 
 
-TEST_DB_URL = env.str("TEST_DATABASE_URL",
-                      default="postgresql+asyncpg://postgres_test:postgres_test@localhost:5429/postgres_test"
-                      )
+class Settings(BaseSettings):
+    DB_URL: str
+    TEST_DB_URL: str
+    REDIS_URL: str
 
-REDIS_URL = env.str("REDIS_URL",
-                    default="redis://localhost:6379"
-                    )
+
+SETTINGS = Settings()

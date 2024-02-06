@@ -9,7 +9,7 @@ from alembic import context
 
 
 from core.base import Base
-from core.settings import DB_URL
+from core.settings import SETTINGS
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -34,7 +34,7 @@ target_metadata = Base.metadata
 
 def run_migrations_offline() -> None:
 
-    url = config.get_main_option(DB_URL)
+    url = config.get_main_option(SETTINGS.DB_URL)
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -58,8 +58,8 @@ async def run_async_migrations() -> None:
     and associate a connection with the context.
 
     """
-    configuration =  config.get_section(config.config_ini_section, {})
-    configuration['sqlalchemy.url'] = DB_URL
+    configuration = config.get_section(config.config_ini_section, {})
+    configuration['sqlalchemy.url'] = SETTINGS.DB_URL
     connectable = async_engine_from_config(
         configuration,
         prefix="sqlalchemy.",

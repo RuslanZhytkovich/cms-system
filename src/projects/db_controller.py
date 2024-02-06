@@ -60,6 +60,23 @@ class ProjectDBController:
         except Exception as e:
             raise DatabaseException(str(e))
 
+    @staticmethod
+    async def soft_delete(project_id: int, db: AsyncSession):
+        try:
+            query = (
+                update(Project)
+                .where(Project.project_id == project_id)
+                .values(is_deleted=True)
+                .returning(Project)
+            )
+            result = await db.execute(query)
+            updated = result.scalar()
+            await db.commit()
+            return updated
+
+        except Exception:
+            raise DatabaseException
+
 
 
 

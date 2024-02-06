@@ -24,5 +24,9 @@ class ProjectService:
         return await ProjectDBController.update_project_by_id(project_id=project_id, project=project, db=db)
 
     @staticmethod
+    async def soft_delete_project(project_id: int, db: AsyncSession = Depends(get_db)):
+        return await ProjectDBController.soft_delete(project_id=project_id, db=db)
+
+    @staticmethod
     async def create_project(new_project: CreateProject, db: AsyncSession = Depends(get_db)):
         return await ProjectDBController.create_project(new_project=new_project, db=db)

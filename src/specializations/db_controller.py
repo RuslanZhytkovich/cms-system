@@ -59,3 +59,20 @@ class SpecializationDBController:
             return updated
         except Exception as e:
             raise DatabaseException(str(e))
+
+    @staticmethod
+    async def soft_delete(specialization_id: int, db: AsyncSession):
+        try:
+            query = (
+                update(Specialization)
+                .where(Specialization.specialization_id == specialization_id)
+                .values(is_deleted=True)
+                .returning(Specialization)
+            )
+            result = await db.execute(query)
+            updated = result.scalar()
+            await db.commit()
+            return updated
+
+        except Exception:
+            raise DatabaseException

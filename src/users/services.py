@@ -26,6 +26,10 @@ class UserService:
         return await UserDBController.update_user_by_id(user_id=user_id, user=user, db=db)
 
     @staticmethod
+    async def soft_delete_user(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+        return await UserDBController.soft_delete(user_id=user_id, db=db)
+
+    @staticmethod
     async def create_user(new_user: CreateUserFullData, db: AsyncSession = Depends(get_db)):
         return await UserDBController.create_user(new_user=new_user, db=db)
 

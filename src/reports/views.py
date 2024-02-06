@@ -42,6 +42,14 @@ async def update_report_by_id(report_id: int, report: UpdateReport, db: AsyncSes
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@report_router.patch("/soft_delete", status_code=status.HTTP_200_OK)
+async def soft_delete_report(report_id: int, db: AsyncSession = Depends(get_db)):
+    try:
+        return await ReportService.soft_delete_report(report_id=report_id, db=db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @report_router.post("/create", response_model=ShowReport)
 async def create_report(new_report: CreateReport, db: AsyncSession = Depends(get_db)):
     try:

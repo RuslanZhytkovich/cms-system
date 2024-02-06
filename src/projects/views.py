@@ -43,6 +43,14 @@ async def update_project_by_id(project_id: int, project: UpdateProject, db: Asyn
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@project_router.patch("/soft_delete", status_code=status.HTTP_200_OK)
+async def soft_delete_project(project_id: int, db: AsyncSession = Depends(get_db)):
+    try:
+        return await ProjectService.soft_delete_project(project_id=project_id, db=db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @project_router.post("/create", response_model=ShowProject)
 async def create_project(new_project: CreateProject, db: AsyncSession = Depends(get_db)):
     try:

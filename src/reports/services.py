@@ -24,5 +24,9 @@ class ReportService:
         return await ReportDBController.update_report_by_id(report_id=report_id, report=report, db=db)
 
     @staticmethod
+    async def soft_delete_report(report_id: int, db: AsyncSession = Depends(get_db)):
+        return await ReportDBController.soft_delete(report_id=report_id, db=db)
+
+    @staticmethod
     async def create_report(new_report: CreateReport, db: AsyncSession = Depends(get_db)):
         return await ReportDBController.create_report(new_report=new_report, db=db)

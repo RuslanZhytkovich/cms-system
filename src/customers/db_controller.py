@@ -61,6 +61,25 @@ class CustomerDBController:
         except Exception as e:
             raise DatabaseException(str(e))
 
+    @staticmethod
+    async def soft_delete(customer_id: int, db: AsyncSession):
+        try:
+            query = (
+                update(Customer)
+                .where(Customer.customer_id == customer_id)
+                .values(is_deleted=True)
+                .returning(Customer)
+            )
+            result = await db.execute(query)
+            updated = result.scalar()
+            await db.commit()
+            return updated
+
+        except Exception:
+            raise DatabaseException
+
+
+
 
 
 

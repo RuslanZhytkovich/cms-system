@@ -23,5 +23,9 @@ class CustomerService:
         return await CustomerDBController.update_customer_by_id(customer_id=customer_id, customer=customer, db=db)
 
     @staticmethod
+    async def soft_delete_customer(customer_id: int, db: AsyncSession = Depends(get_db)):
+        return await CustomerDBController.soft_delete(customer_id=customer_id, db=db)
+
+    @staticmethod
     async def create_customer(new_customer: CreateCustomer, db: AsyncSession = Depends(get_db)):
         return await CustomerDBController.create_customer(new_customer=new_customer, db=db)
