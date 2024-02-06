@@ -2,9 +2,9 @@ import uuid
 
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.core.exceptions import DatabaseException
-from src.users.schemas import CreateUserFullData, UpdateUser
-from src.users.models import User
+from core.exceptions import DatabaseException
+from users.schemas import CreateUserFullData, UpdateUser
+from users.models import User
 
 
 class UserDBController:
@@ -20,7 +20,6 @@ class UserDBController:
         new_user = result.scalar()
         await db.commit()
         return new_user
-
 
     @staticmethod
     async def get_user_by_id(db: AsyncSession, user_id: uuid.UUID):

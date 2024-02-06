@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.db import get_db
-from src.reports.db_controller import ReportDBController
-from src.reports.schemas import UpdateReport, CreateReport
+from core.db import get_db
+from reports.db_controller import ReportDBController
+from reports.schemas import UpdateReport, CreateReport
 
 
 class ReportService:

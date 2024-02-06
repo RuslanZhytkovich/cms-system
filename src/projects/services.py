@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.db import get_db
-from src.projects.db_controller import ProjectDBController
-from src.projects.schemas import UpdateProject, CreateProject
+from core.db import get_db
+from projects.db_controller import ProjectDBController
+from projects.schemas import UpdateProject, CreateProject
 
 
 class ProjectService:

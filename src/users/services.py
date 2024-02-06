@@ -2,10 +2,10 @@ import uuid
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.users.schemas import UpdateUser, CreateUserFullData
-from src.users.db_controller import UserDBController
-from src.core.db import get_db
-from src.users.models import User
+from users.schemas import UpdateUser, CreateUserFullData
+from users.db_controller import UserDBController
+from core.db import get_db
+from users.models import User
 
 
 class UserService:

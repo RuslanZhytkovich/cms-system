@@ -4,9 +4,9 @@ from typing import List
 
 from starlette import status
 
-from src.core.db import get_db
-from src.projects.schemas import ShowProject, UpdateProject, CreateProject
-from src.projects.services import ProjectService
+from core.db import get_db
+from projects.schemas import ShowProject, UpdateProject, CreateProject
+from projects.services import ProjectService
 
 project_router = APIRouter()
 

@@ -4,9 +4,9 @@ from typing import List
 
 from starlette import status
 
-from src.core.db import get_db
-from src.reports.schemas import ShowReport, CreateReport, UpdateReport
-from src.reports.services import ReportService
+from core.db import get_db
+from reports.schemas import ShowReport, CreateReport, UpdateReport
+from reports.services import ReportService
 report_router = APIRouter()
 
 

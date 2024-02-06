@@ -11,16 +11,16 @@ services:
     ports:
       - "5432:5432"
 
-  test-db:
+  test_db:
     container_name: "test-db"
     image: postgres:15.3
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=cms_db
+      - POSTGRES_USER=postgres_test
+      - POSTGRES_PASSWORD=postgres_test
+      - POSTGRES_DB=postgres_test
     ports:
-      - "5433:5432"
+      - "5429:5432"
 
   redis:
     image: redis:7

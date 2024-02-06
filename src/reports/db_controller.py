@@ -1,9 +1,9 @@
 from sqlalchemy import select, delete, insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.exceptions import DatabaseException
-from src.reports.models import Report
-from src.reports.schemas import CreateReport, UpdateReport
+from core.exceptions import DatabaseException
+from reports.models import Report
+from reports.schemas import CreateReport, UpdateReport
 
 
 class ReportDBController:

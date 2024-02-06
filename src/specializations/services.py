@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.db import get_db
-from src.specializations.db_controller import SpecializationDBController
-from src.specializations.schemas import UpdateSpecialization, CreateSpecialization
+from core.db import get_db
+from specializations.db_controller import SpecializationDBController
+from specializations.schemas import UpdateSpecialization, CreateSpecialization
 
 
 class SpecializationService:

@@ -4,9 +4,9 @@ from typing import List
 
 from starlette import status
 
-from src.core.db import get_db
-from src.customers.schemas import ShowCustomer, CreateCustomer, UpdateCustomer
-from src.customers.services import CustomerService
+from core.db import get_db
+from customers.schemas import ShowCustomer, CreateCustomer, UpdateCustomer
+from customers.services import CustomerService
 
 customer_router = APIRouter()
 

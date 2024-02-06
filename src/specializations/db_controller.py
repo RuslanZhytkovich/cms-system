@@ -1,8 +1,8 @@
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.core.exceptions import DatabaseException
-from src.specializations.models import Specialization
-from src.specializations.schemas import CreateSpecialization, UpdateSpecialization
+from core.exceptions import DatabaseException
+from specializations.models import Specialization
+from specializations.schemas import CreateSpecialization, UpdateSpecialization
 
 
 class SpecializationDBController:

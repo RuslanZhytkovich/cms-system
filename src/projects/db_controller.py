@@ -1,9 +1,9 @@
 from sqlalchemy import select, delete, insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.exceptions import DatabaseException
-from src.projects.models import Project
-from src.projects.schemas import CreateProject, UpdateProject
+from core.exceptions import DatabaseException
+from projects.models import Project
+from projects.schemas import CreateProject, UpdateProject
 
 
 class ProjectDBController:

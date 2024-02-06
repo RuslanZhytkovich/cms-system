@@ -3,9 +3,9 @@ from typing import List
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.db import get_db
-from src.specializations.schemas import CreateSpecialization, UpdateSpecialization, ShowSpecialization
-from src.specializations.services import SpecializationService
+from core.db import get_db
+from specializations.schemas import CreateSpecialization, UpdateSpecialization, ShowSpecialization
+from specializations.services import SpecializationService
 
 specialization_router = APIRouter()
 
@@ -26,7 +26,7 @@ async def get_specialization_by_id(specialization_id: int, db: AsyncSession = De
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@specialization_router.delete("/delete_by_id", status_code=status.HTTP_200_OK)
+@specialization_router.delete("/delete_by_id/{specialization_id}", status_code=status.HTTP_200_OK)
 async def delete_specialization_by_id(specialization_id: int, db: AsyncSession = Depends(get_db)):
     try:
         return await SpecializationService.delete_specialization_by_id(specialization_id=specialization_id, db=db)

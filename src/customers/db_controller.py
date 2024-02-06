@@ -1,9 +1,9 @@
 from sqlalchemy import select, delete, insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.exceptions import DatabaseException
-from src.customers.models import Customer
-from src.customers.schemas import CreateCustomer, UpdateCustomer
+from core.exceptions import DatabaseException
+from customers.models import Customer
+from customers.schemas import CreateCustomer, UpdateCustomer
 
 
 class CustomerDBController:

@@ -1,8 +1,8 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.customers.db_controller import CustomerDBController
-from src.core.db import get_db
-from src.customers.schemas import UpdateCustomer, CreateCustomer
+from customers.db_controller import CustomerDBController
+from core.db import get_db
+from customers.schemas import UpdateCustomer, CreateCustomer
 
 
 class CustomerService:

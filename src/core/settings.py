@@ -8,9 +8,9 @@ DB_URL = env.str("REAL_DATABASE_URL",
 
 
 TEST_DB_URL = env.str("TEST_DATABASE_URL",
-                      default="postgresql+asyncpg://postgres_test:postgres_test@localhost:5433/postgres_test"
+                      default="postgresql+asyncpg://postgres_test:postgres_test@localhost:5429/postgres_test"
                       )
 
 REDIS_URL = env.str("REDIS_URL",
-                    default=""
+                    default="redis://localhost:6379"
                     )

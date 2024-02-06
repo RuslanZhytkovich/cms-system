@@ -3,9 +3,9 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.db import get_db
-from src.users.services import UserService
-from src.users.schemas import ShowUser, CreateUserFullData, UpdateUser
+from core.db import get_db
+from users.services import UserService
+from users.schemas import ShowUser, CreateUserFullData, UpdateUser
 
 user_router = APIRouter()
 

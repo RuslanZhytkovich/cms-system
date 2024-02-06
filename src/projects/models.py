@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from core.db import Base
 
 
-
 class Project(Base):
     __tablename__ = "projects"
     project_id = Column(Integer, autoincrement=True, primary_key=True, index=True)
