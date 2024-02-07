@@ -1,7 +1,8 @@
 import asyncio
 import pytest
+import pytest_asyncio
 from httpx import AsyncClient
-from sqlalchemy import NullPool
+from sqlalchemy import NullPool, insert
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
@@ -9,6 +10,8 @@ from core.base import Base
 from core.db import get_db
 from core.settings import SETTINGS
 from main import app
+from specializations.models import Specialization
+from specializations.schemas import CreateSpecialization
 
 engine_test = create_async_engine(SETTINGS.TEST_DB_URL, poolclass=NullPool)
 async_session_maker = sessionmaker(engine_test, class_=AsyncSession, expire_on_commit=False)

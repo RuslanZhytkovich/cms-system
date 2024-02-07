@@ -7,8 +7,6 @@ async def test_get_all_specializations(client):
     assert response.status_code == 200
 
 
-
-
 @pytest.mark.asyncio
 async def test_create_specializations(client):
     response = await client.post("/specializations/create", json={
@@ -16,7 +14,6 @@ async def test_create_specializations(client):
         "is_deleted": False,
     })
     assert response.status_code == 200
-
 
 
 @pytest.mark.asyncio
