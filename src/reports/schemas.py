@@ -1,6 +1,7 @@
 import uuid
-from pydantic import BaseModel
 from datetime import date
+
+from pydantic import BaseModel
 
 
 class BaseReport(BaseModel):
@@ -24,7 +25,3 @@ class CreateReport(BaseReport):
 
 class UpdateReport(BaseReport):
     pass
-
-
-
-

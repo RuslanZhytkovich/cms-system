@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
-from starlette import status
-
 from core.db import get_db
-from customers.schemas import ShowCustomer, CreateCustomer, UpdateCustomer
+from customers.schemas import CreateCustomer
+from customers.schemas import ShowCustomer
+from customers.schemas import UpdateCustomer
 from customers.services import CustomerService
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette import status
 
 customer_router = APIRouter()
 
@@ -30,29 +33,39 @@ async def get_customer_by_id(customer_id: int, db: AsyncSession = Depends(get_db
 @customer_router.delete("/delete_by_id", status_code=status.HTTP_200_OK)
 async def delete_customer_by_id(customer_id: int, db: AsyncSession = Depends(get_db)):
     try:
-        return await CustomerService.delete_customer_by_id(customer_id=customer_id, db=db)
+        return await CustomerService.delete_customer_by_id(
+            customer_id=customer_id, db=db
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @customer_router.patch("/update_by_id", status_code=status.HTTP_200_OK)
-async def update_customer_by_id(customer_id: int, customer: UpdateCustomer, db: AsyncSession = Depends(get_db)):
+async def update_customer_by_id(
+    customer_id: int, customer: UpdateCustomer, db: AsyncSession = Depends(get_db)
+):
     try:
-        return await CustomerService.update_customer_by_id(customer_id=customer_id, customer=customer, db=db)
+        return await CustomerService.update_customer_by_id(
+            customer_id=customer_id, customer=customer, db=db
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @customer_router.patch("/soft_delete", status_code=status.HTTP_200_OK)
-async def update_customer_by_id(customer_id: int, db: AsyncSession = Depends(get_db)):
+async def soft_delete_customer(customer_id: int, db: AsyncSession = Depends(get_db)):
     try:
-        return await CustomerService.soft_delete_customer(customer_id=customer_id, db=db)
+        return await CustomerService.soft_delete_customer(
+            customer_id=customer_id, db=db
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @customer_router.post("/create", response_model=ShowCustomer)
-async def create_customer(new_customer: CreateCustomer, db: AsyncSession = Depends(get_db)):
+async def create_customer(
+    new_customer: CreateCustomer, db: AsyncSession = Depends(get_db)
+):
     try:
         return await CustomerService.create_customer(new_customer=new_customer, db=db)
     except Exception as e:

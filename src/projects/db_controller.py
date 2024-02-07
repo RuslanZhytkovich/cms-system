@@ -1,9 +1,12 @@
-from sqlalchemy import select, delete, insert, update
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from core.exceptions import DatabaseException
 from projects.models import Project
-from projects.schemas import CreateProject, UpdateProject
+from projects.schemas import CreateProject
+from projects.schemas import UpdateProject
+from sqlalchemy import delete
+from sqlalchemy import insert
+from sqlalchemy import select
+from sqlalchemy import update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class ProjectDBController:
@@ -45,7 +48,9 @@ class ProjectDBController:
             raise DatabaseException(str(e))
 
     @staticmethod
-    async def update_project_by_id(project_id: int, project: UpdateProject, db: AsyncSession):
+    async def update_project_by_id(
+        project_id: int, project: UpdateProject, db: AsyncSession
+    ):
         try:
             query = (
                 update(Project)
@@ -76,9 +81,3 @@ class ProjectDBController:
 
         except Exception:
             raise DatabaseException
-
-
-
-
-
-

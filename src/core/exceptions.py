@@ -34,8 +34,10 @@ class InvalidArgument(Exception):
 class EntityAlreadyExist(Exception):
     pass
 
+
 class EntityNotFoundException(Exception):
     pass
+
 
 class Unauthorized(Exception):
     pass

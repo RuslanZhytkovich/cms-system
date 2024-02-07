@@ -1,12 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
+from core.db import get_db
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
+from reports.schemas import CreateReport
+from reports.schemas import ShowReport
+from reports.schemas import UpdateReport
+from reports.services import ReportService
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from core.db import get_db
-from reports.schemas import ShowReport, CreateReport, UpdateReport
-from reports.services import ReportService
 report_router = APIRouter()
 
 
@@ -35,9 +39,13 @@ async def delete_report_by_id(report_id: int, db: AsyncSession = Depends(get_db)
 
 
 @report_router.patch("/update_by_id", status_code=status.HTTP_200_OK)
-async def update_report_by_id(report_id: int, report: UpdateReport, db: AsyncSession = Depends(get_db)):
+async def update_report_by_id(
+    report_id: int, report: UpdateReport, db: AsyncSession = Depends(get_db)
+):
     try:
-        return await ReportService.update_report_by_id(report_id=report_id, report=report, db=db)
+        return await ReportService.update_report_by_id(
+            report_id=report_id, report=report, db=db
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -1,5 +1,6 @@
-from pydantic import BaseModel
 from datetime import date
+
+from pydantic import BaseModel
 
 
 class BaseProject(BaseModel):
@@ -24,8 +25,3 @@ class CreateProject(BaseProject):
 
 class UpdateProject(BaseProject):
     pass
-
-
-
-
-

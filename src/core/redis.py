@@ -14,7 +14,9 @@ class RedisRepository:
     @classmethod
     async def connect_to_redis(cls):
         if cls.__redis is None:
-            cls.__redis = await redis.from_url(settings.REDIS_URL, decode_responses=True)
+            cls.__redis = await redis.from_url(
+                settings.REDIS_URL, decode_responses=True
+            )
 
     @classmethod
     async def clear_key(cls, key: str):

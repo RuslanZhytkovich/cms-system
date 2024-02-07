@@ -11,7 +11,7 @@ To make migrations if you don't have alembic.ini yet, write the following comman
 alembic init migrations
 ---
 
-After this action migration's folder and conf. file will be created 
+After this action migration's folder and conf. file will be created
 Go to env.py in migrations, and change the following:
 
 ---
@@ -27,13 +27,13 @@ alembic revision --autogenerate -m "comment"
 alembic upgrade heads
 ---
 
-To run testing change directory to tests: 
+To run testing change directory to tests:
 
 ---
 cd src/backend/tests
 ---
 
-And then write: 
+And then write:
 
 ---
 pytest

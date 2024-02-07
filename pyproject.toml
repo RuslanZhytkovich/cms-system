@@ -3,5 +3,3 @@ pythonpath = [
   ".", "src",
 ]
 asyncio_mode="auto"
-
-

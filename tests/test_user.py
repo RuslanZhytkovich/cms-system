@@ -1,6 +1,6 @@
 import json
+
 import pytest
-from conftest import client
 from users.enums import RoleEnum
 
 
@@ -11,12 +11,14 @@ async def test_get_all_users(client):
 
 
 async def test_create_user(client):
-    spec_data = {                   # FK for creating user
+    spec_data = {  # FK for creating user
         "specialization_name": "specialization1",
         "is_deleted": False,
     }
 
-    create_spec_resp = await client.post("/specializations/create", data=json.dumps(spec_data))
+    create_spec_resp = await client.post(
+        "/specializations/create", data=json.dumps(spec_data)
+    )
     data_from_create_spec = create_spec_resp.json()
 
     user_data = {
@@ -31,10 +33,12 @@ async def test_create_user(client):
         "time_created": "2024-02-07",
         "last_login": "2024-02-07",
         "is_active": True,
-        "specialization_id": data_from_create_spec["specialization_id"]
-     }
+        "specialization_id": data_from_create_spec["specialization_id"],
+    }
 
-    create_user_response = await client.post("/users/create", data=json.dumps(user_data))
+    create_user_response = await client.post(
+        "/users/create", data=json.dumps(user_data)
+    )
     data_from_create_user = create_user_response.json()
 
     assert create_user_response.status_code == 200
@@ -50,11 +54,3 @@ async def test_create_user(client):
     assert data_from_create_user["last_login"] == user_data["last_login"]
     assert data_from_create_user["is_active"] is True
     assert data_from_create_user["specialization_id"] == user_data["specialization_id"]
-
-
-
-
-
-
-
-

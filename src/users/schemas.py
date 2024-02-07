@@ -1,8 +1,8 @@
 import uuid
 from datetime import date
 
-from pydantic import BaseModel, EmailStr
-
+from pydantic import BaseModel
+from pydantic import EmailStr
 from users.enums import RoleEnum
 
 

@@ -1,0 +1,10 @@
+OPENED:
+    07.02.2024 - Tests for all the endpoints
+    07.02.2024 - Celery for deleting ultra-archive users (last-login 1 year +)
+    07.02.2024 - Redis
+
+
+
+
+
+CLOSED:

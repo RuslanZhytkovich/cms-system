@@ -1,9 +1,12 @@
-import datetime
-
-import timestamp
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, func, Date, DateTime
-from sqlalchemy.orm import relationship
 from core.db import Base
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import Date
+from sqlalchemy import ForeignKey
+from sqlalchemy import func
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy.orm import relationship
 
 
 class Project(Base):
@@ -14,6 +17,6 @@ class Project(Base):
     end_date = Column(Date, server_default=func.now(), nullable=False)
     is_finished = Column(Boolean, default=False)
     is_deleted = Column(Boolean, default=False)
-    customer_id = Column(Integer, ForeignKey('customers.customer_id'))
+    customer_id = Column(Integer, ForeignKey("customers.customer_id"))
 
-    users = relationship('User', secondary='project_users', back_populates='projects')
+    users = relationship("User", secondary="project_users", back_populates="projects")

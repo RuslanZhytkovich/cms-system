@@ -1,20 +1,21 @@
 import asyncio
+
 import pytest
-import pytest_asyncio
-from httpx import AsyncClient
-from sqlalchemy import NullPool, insert
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-from fastapi.testclient import TestClient
 from core.base import Base
 from core.db import get_db
 from core.settings import SETTINGS
+from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from main import app
-from specializations.models import Specialization
-from specializations.schemas import CreateSpecialization
+from sqlalchemy import NullPool
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
 
 engine_test = create_async_engine(SETTINGS.TEST_DB_URL, poolclass=NullPool)
-async_session_maker = sessionmaker(engine_test, class_=AsyncSession, expire_on_commit=False)
+async_session_maker = sessionmaker(
+    engine_test, class_=AsyncSession, expire_on_commit=False
+)
 Base.metadata.bind = engine_test
 
 
@@ -26,7 +27,7 @@ async def override_get_async_session():
 app.dependency_overrides[get_db] = override_get_async_session
 
 
-@pytest.fixture(autouse=True, scope='session')
+@pytest.fixture(autouse=True, scope="session")
 async def prepare_database():
     async with engine_test.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -35,7 +36,7 @@ async def prepare_database():
         await conn.run_sync(Base.metadata.drop_all)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def event_loop(request):
     """Create an instance of the default event loop for each test case."""
     loop = asyncio.get_event_loop_policy().new_event_loop()
@@ -50,6 +51,3 @@ client = TestClient(app)
 async def client():
     async with AsyncClient(app=app, base_url="http://test") as client:
         yield client
-
-
-

@@ -19,8 +19,3 @@ class CreateCustomer(BaseCustomer):
 
 class UpdateCustomer(BaseCustomer):
     pass
-
-
-
-
-

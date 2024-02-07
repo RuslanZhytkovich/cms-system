@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
-from starlette import status
-
 from core.db import get_db
-from projects.schemas import ShowProject, UpdateProject, CreateProject
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
+from projects.schemas import CreateProject
+from projects.schemas import ShowProject
+from projects.schemas import UpdateProject
 from projects.services import ProjectService
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette import status
 
 project_router = APIRouter()
 
@@ -36,9 +39,13 @@ async def delete_project_by_id(project_id: int, db: AsyncSession = Depends(get_d
 
 
 @project_router.patch("/update_by_id", status_code=status.HTTP_200_OK)
-async def update_project_by_id(project_id: int, project: UpdateProject, db: AsyncSession = Depends(get_db)):
+async def update_project_by_id(
+    project_id: int, project: UpdateProject, db: AsyncSession = Depends(get_db)
+):
     try:
-        return await ProjectService.update_project_by_id(project_id=project_id, project=project, db=db)
+        return await ProjectService.update_project_by_id(
+            project_id=project_id, project=project, db=db
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -52,7 +59,9 @@ async def soft_delete_project(project_id: int, db: AsyncSession = Depends(get_db
 
 
 @project_router.post("/create", response_model=ShowProject)
-async def create_project(new_project: CreateProject, db: AsyncSession = Depends(get_db)):
+async def create_project(
+    new_project: CreateProject, db: AsyncSession = Depends(get_db)
+):
     try:
         return await ProjectService.create_project(new_project=new_project, db=db)
     except Exception as e:

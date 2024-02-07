@@ -1,9 +1,12 @@
-from sqlalchemy import select, delete, insert, update
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from core.exceptions import DatabaseException
 from customers.models import Customer
-from customers.schemas import CreateCustomer, UpdateCustomer
+from customers.schemas import CreateCustomer
+from customers.schemas import UpdateCustomer
+from sqlalchemy import delete
+from sqlalchemy import insert
+from sqlalchemy import select
+from sqlalchemy import update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class CustomerDBController:
@@ -45,8 +48,9 @@ class CustomerDBController:
             raise DatabaseException(str(e))
 
     @staticmethod
-    async def update_customer_by_id(customer_id: int, customer: UpdateCustomer,
-                                          db: AsyncSession):
+    async def update_customer_by_id(
+        customer_id: int, customer: UpdateCustomer, db: AsyncSession
+    ):
         try:
             query = (
                 update(Customer)
@@ -77,11 +81,3 @@ class CustomerDBController:
 
         except Exception:
             raise DatabaseException
-
-
-
-
-
-
-
-

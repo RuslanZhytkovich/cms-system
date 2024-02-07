@@ -1,10 +1,14 @@
 import uuid
 
-from sqlalchemy import select, insert, delete, update
-from sqlalchemy.ext.asyncio import AsyncSession
 from core.exceptions import DatabaseException
-from users.schemas import CreateUserFullData, UpdateUser
+from sqlalchemy import delete
+from sqlalchemy import insert
+from sqlalchemy import select
+from sqlalchemy import update
+from sqlalchemy.ext.asyncio import AsyncSession
 from users.models import User
+from users.schemas import CreateUserFullData
+from users.schemas import UpdateUser
 
 
 class UserDBController:
@@ -60,7 +64,7 @@ class UserDBController:
         try:
             query = (
                 update(User)
-                .where(User.user_id == user_id)
+                .where(User.user_id == user_id, User.is_active == True)
                 .values(is_active=False)
                 .returning(User)
             )

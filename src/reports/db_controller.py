@@ -1,9 +1,12 @@
-from sqlalchemy import select, delete, insert, update
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from core.exceptions import DatabaseException
 from reports.models import Report
-from reports.schemas import CreateReport, UpdateReport
+from reports.schemas import CreateReport
+from reports.schemas import UpdateReport
+from sqlalchemy import delete
+from sqlalchemy import insert
+from sqlalchemy import select
+from sqlalchemy import update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class ReportDBController:
@@ -45,7 +48,9 @@ class ReportDBController:
             raise DatabaseException(str(e))
 
     @staticmethod
-    async def update_report_by_id(report_id: int, report: UpdateReport, db: AsyncSession):
+    async def update_report_by_id(
+        report_id: int, report: UpdateReport, db: AsyncSession
+    ):
         try:
             query = (
                 update(Report)
@@ -76,10 +81,3 @@ class ReportDBController:
 
         except Exception:
             raise DatabaseException
-
-
-
-
-
-
-
