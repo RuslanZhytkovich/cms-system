@@ -38,3 +38,6 @@ And then write:
 ---
 pytest
 ---
+
+pre-commit run --all-files
+
