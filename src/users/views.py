@@ -18,24 +18,24 @@ async def get_all_users(db: AsyncSession = Depends(get_db)):
     return await UserService.get_all_users_service(db=db)
 
 
-@user_router.get("/get_by_id", response_model=ShowUser)
+@user_router.get("/get_by_id/{user_id}", response_model=ShowUser)
 async def get_user_by_id(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     return await UserService.get_user_by_id(user_id=user_id, db=db)
 
 
-@user_router.delete("/delete")
+@user_router.delete("/delete/{user_id}")
 async def delete_user_by_id(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     return await UserService.delete_user_by_id(user_id=user_id, db=db)
 
 
-@user_router.patch("/update")
+@user_router.patch("/update/{user_id}")
 async def update_user_by_id(
     user_id: uuid.UUID, user: UpdateUser, db: AsyncSession = Depends(get_db)
 ):
     return await UserService.update_user_by_id(user_id=user_id, user=user, db=db)
 
 
-@user_router.patch("/soft_delete")
+@user_router.patch("/soft_delete/{user_id}")
 async def soft_delete(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     return await UserService.soft_delete_user(user_id=user_id, db=db)
 

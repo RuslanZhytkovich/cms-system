@@ -22,7 +22,7 @@ async def get_all_report(db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@report_router.get("/get_by_id", response_model=ShowReport)
+@report_router.get("/get_by_id/{report_id}", response_model=ShowReport)
 async def get_report_by_id(report_id: int, db: AsyncSession = Depends(get_db)):
     try:
         return await ReportService.get_report_by_id(report_id=report_id, db=db)
@@ -30,7 +30,7 @@ async def get_report_by_id(report_id: int, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail=str(e))
 
 
-@report_router.delete("/delete_by_id", status_code=status.HTTP_200_OK)
+@report_router.delete("/delete_by_id/{report_id}", status_code=status.HTTP_200_OK)
 async def delete_report_by_id(report_id: int, db: AsyncSession = Depends(get_db)):
     try:
         return await ReportService.delete_report_by_id(report_id=report_id, db=db)
@@ -38,7 +38,7 @@ async def delete_report_by_id(report_id: int, db: AsyncSession = Depends(get_db)
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@report_router.patch("/update_by_id", status_code=status.HTTP_200_OK)
+@report_router.patch("/update_by_id/{report_id}", status_code=status.HTTP_200_OK)
 async def update_report_by_id(
     report_id: int, report: UpdateReport, db: AsyncSession = Depends(get_db)
 ):
@@ -50,7 +50,7 @@ async def update_report_by_id(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@report_router.patch("/soft_delete", status_code=status.HTTP_200_OK)
+@report_router.patch("/soft_delete/{report_id}", status_code=status.HTTP_200_OK)
 async def soft_delete_report(report_id: int, db: AsyncSession = Depends(get_db)):
     try:
         return await ReportService.soft_delete_report(report_id=report_id, db=db)

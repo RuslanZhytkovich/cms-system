@@ -22,7 +22,9 @@ async def get_all_specializations(db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@specialization_router.get("/get_by_id", response_model=ShowSpecialization)
+@specialization_router.get(
+    "/get_by_id/{specialization_id}", response_model=ShowSpecialization
+)
 async def get_specialization_by_id(
     specialization_id: int, db: AsyncSession = Depends(get_db)
 ):
@@ -48,7 +50,9 @@ async def delete_specialization_by_id(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@specialization_router.patch("/update_by_id", status_code=status.HTTP_200_OK)
+@specialization_router.patch(
+    "/update_by_id/{specialization_id}", status_code=status.HTTP_200_OK
+)
 async def update_specialization_by_id(
     specialization_id: int,
     specialization: UpdateSpecialization,
@@ -62,7 +66,9 @@ async def update_specialization_by_id(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@specialization_router.patch("/soft_delete", status_code=status.HTTP_200_OK)
+@specialization_router.patch(
+    "/soft_delete/{specialization_id}", status_code=status.HTTP_200_OK
+)
 async def soft_delete_specialization(
     specialization_id: int, db: AsyncSession = Depends(get_db)
 ):

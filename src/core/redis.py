@@ -8,8 +8,6 @@ from src.core import settings
 from src.core.exceptions import RequestProcessingException
 
 
-
-
 class RedisRepository:
     __redis = None
 
