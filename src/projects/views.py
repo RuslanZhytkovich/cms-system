@@ -66,5 +66,3 @@ async def create_project(
         return await ProjectService.create_project(new_project=new_project, db=db)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-

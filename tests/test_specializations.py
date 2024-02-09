@@ -38,16 +38,17 @@ async def test_update_specialization(client):
     create_specialization_response = await client.post(
         "/specializations/create",
         data=json.dumps(
-            {"specialization_name": "Specialization3",
-             "is_deleted": False}
+            {"specialization_name": "Specialization3", "is_deleted": False}
         ),
     )
 
     update_specialization = await client.patch(
-        f"/specializations/update_by_id/{create_specialization_response.json()["specialization_id"]}", json={
+        f"/specializations/update_by_id/{create_specialization_response.json()['specialization_id']}",
+        json={
             "specialization_name": "new_specializations2",
             "is_deleted": True,
-        })
+        },
+    )
 
     assert update_specialization.status_code == 200
     assert create_specialization_response.status_code == 200

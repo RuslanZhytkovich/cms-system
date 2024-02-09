@@ -1,7 +1,6 @@
 import json
 
 import pytest
-
 from users.enums import RoleEnum
 
 
@@ -44,35 +43,43 @@ async def test_create_report(client):
     data_from_create_user = create_user_response.json()
 
     create_customer_resp = await client.post(
-        "/customers/create", data=json.dumps({
-        "customer_name": "project3",
-        "is_deleted": False,
-    }))
-
+        "/customers/create",
+        data=json.dumps(
+            {
+                "customer_name": "project3",
+                "is_deleted": False,
+            }
+        ),
+    )
 
     create_project_response = await client.post(
-        "/projects/create", data=json.dumps({
-        "project_name": "strifsfng",
-        "start_date": "2024-02-08",
-        "end_date": "2024-02-08",
-        "is_finished": False,
-        "is_deleted": False,
-        "customer_id": create_customer_resp.json()["customer_id"],
-    }))
+        "/projects/create",
+        data=json.dumps(
+            {
+                "project_name": "strifsfng",
+                "start_date": "2024-02-08",
+                "end_date": "2024-02-08",
+                "is_finished": False,
+                "is_deleted": False,
+                "customer_id": create_customer_resp.json()["customer_id"],
+            }
+        ),
+    )
 
-    create_report_response = await client.post(
-        "/reports/create", data=json.dumps({
-            "report_name": "strifsfng",
-            "date": "2024-02-08",
-            "hours": "4",
-            "comment": "dsadasd",
-            "is_deleted": False,
-            "user_id": data_from_create_user["user_id"],
-            "project_id": create_project_response.json()["project_id"],
-        }))
+    await client.post(
+        "/reports/create",
+        data=json.dumps(
+            {
+                "report_name": "strifsfng",
+                "date": "2024-02-08",
+                "hours": "4",
+                "comment": "dsadasd",
+                "is_deleted": False,
+                "user_id": data_from_create_user["user_id"],
+                "project_id": create_project_response.json()["project_id"],
+            }
+        ),
+    )
 
     assert create_project_response.status_code == 200
     assert create_project_response.status_code == 200
-
-
-

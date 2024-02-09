@@ -38,17 +38,16 @@ async def test_soft_delete_customer(client: AsyncClient):
 async def test_update_customer(client):
     create_customer_response = await client.post(
         "/customers/create",
-        data=json.dumps(
-            {"customer_name": "dasd",
-             "is_deleted": False}
-        ),
+        data=json.dumps({"customer_name": "dasd", "is_deleted": False}),
     )
 
-    update_customer = await client.patch(f"/customers/update_by_id/{create_customer_response.json()["customer_id"]}",
-                                         json={
-                                             "customer_name": "new_customer",
-                                             "is_deleted": True,
-                                         })
+    update_customer = await client.patch(
+        f"/customers/update_by_id/{create_customer_response.json()['customer_id']}",
+        json={
+            "customer_name": "new_customer",
+            "is_deleted": True,
+        },
+    )
 
     assert update_customer.status_code == 200
     assert create_customer_response.status_code == 200

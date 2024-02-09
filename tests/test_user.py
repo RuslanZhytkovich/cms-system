@@ -1,7 +1,6 @@
 import json
 
 import pytest
-
 from users.enums import RoleEnum
 
 
@@ -91,7 +90,8 @@ async def test_soft_delete_user(client):
     )
 
     soft_delete_user = await client.patch(
-        f"/users/soft_delete/{create_user_response.json()["user_id"]}")
+        f"/users/soft_delete/{create_user_response.json()['user_id']}"
+    )
 
     assert soft_delete_user.status_code == 200
     assert soft_delete_user.json()["is_active"] is False
@@ -129,7 +129,9 @@ async def test_get_user_by_id(client):
         ),
     )
 
-    get_user_by_id = await client.get(f"/users/get_by_id/{create_user_response.json()["user_id"]}")
+    get_user_by_id = await client.get(
+        f"/users/get_by_id/{create_user_response.json()['user_id']}"
+    )
 
     assert get_user_by_id.status_code == 200
     assert get_user_by_id.json()["is_active"] is True
@@ -164,25 +166,26 @@ async def test_update_user(client):
 
     create_user_response = await client.post(
         "/users/create",
-        data=json.dumps(
-            create_user_data
-        ),
+        data=json.dumps(create_user_data),
     )
 
-    update_user = await client.patch(f"/users/update/{create_user_response.json()["user_id"]}", json={
-        "email": "new_email@gmail.com",
-        "password": "string",
-        "name": "new_name",
-        "last_name": "string",
-        "role": "admin",
-        "telegram": "strgifdfng",
-        "phone_number": "string",
-        "on_bench": False,
-        "time_created": "2024-02-08",
-        "last_login": "2024-02-08",
-        "is_active": True,
-        "specialization_id": create_spec_resp.json()["specialization_id"],
-    })
+    update_user = await client.patch(
+        f"/users/update/{create_user_response.json()['user_id']}",
+        json={
+            "email": "new_email@gmail.com",
+            "password": "string",
+            "name": "new_name",
+            "last_name": "string",
+            "role": "admin",
+            "telegram": "strgifdfng",
+            "phone_number": "string",
+            "on_bench": False,
+            "time_created": "2024-02-08",
+            "last_login": "2024-02-08",
+            "is_active": True,
+            "specialization_id": create_spec_resp.json()["specialization_id"],
+        },
+    )
 
     assert update_user.status_code == 200
     assert update_user.json()["email"] == "new_email@gmail.com"
