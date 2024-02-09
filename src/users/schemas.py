@@ -28,7 +28,7 @@ class CreateUserFullData(BaseUser):
     time_created: date
     last_login: date
     is_active: bool = True
-    specialization_id: int
+    specialization_id: int = 1
 
 
 class UpdateUser(CreateUserFullData):

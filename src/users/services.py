@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from users.db_controller import UserDBController
 from users.schemas import CreateUserFullData
 from users.schemas import UpdateUser
+from utils.hasher import Hasher
 
 
 class UserService:
@@ -37,4 +38,5 @@ class UserService:
     async def create_user(
         new_user: CreateUserFullData, db: AsyncSession = Depends(get_db)
     ):
+        new_user.password = Hasher.get_password_hash(new_user.password)
         return await UserDBController.create_user(new_user=new_user, db=db)

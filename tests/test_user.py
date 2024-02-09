@@ -2,6 +2,7 @@ import json
 
 import pytest
 from users.enums import RoleEnum
+from utils.hasher import Hasher
 
 
 @pytest.mark.asyncio
@@ -45,7 +46,9 @@ async def test_create_user(client):
     assert create_user_response.status_code == 200
     assert create_spec_resp.status_code == 200
     assert data_from_create_user["email"] == user_data["email"]
-    assert data_from_create_user["password"] == user_data["password"]
+    assert data_from_create_user["password"] == Hasher.get_password_hash(
+        user_data["password"]
+    )
     assert data_from_create_user["name"] == user_data["name"]
     assert data_from_create_user["last_name"] == user_data["last_name"]
     assert data_from_create_user["telegram"] == user_data["telegram"]
