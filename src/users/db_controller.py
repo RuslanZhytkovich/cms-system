@@ -35,6 +35,15 @@ class UserDBController:
             raise DatabaseException(str(e))
 
     @staticmethod
+    async def get_user_by_email(db: AsyncSession, email: str):
+        try:
+            query = select(User).where(User.email == email)
+            user = await db.execute(query)
+            return user.scalar()
+        except Exception as e:
+            raise DatabaseException(str(e))
+
+    @staticmethod
     async def delete_user_by_id(db: AsyncSession, user_id: uuid.UUID):
         try:
             query = delete(User).where(User.user_id == user_id)

@@ -15,6 +15,10 @@ class UserService:
         return await UserDBController.get_all_users(db)
 
     @staticmethod
+    async def get_user_by_email(email: str, db: AsyncSession = Depends(get_db)):
+        return await UserDBController.get_user_by_email(email=email, db=db)
+
+    @staticmethod
     async def get_user_by_id(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
         return await UserDBController.get_user_by_id(user_id=user_id, db=db)
 
