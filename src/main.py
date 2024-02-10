@@ -1,6 +1,7 @@
 import subprocess
 
 import uvicorn
+from auth.views import login_router
 from customers.views import customer_router
 from fastapi import FastAPI
 from fastapi.routing import APIRouter
@@ -22,6 +23,7 @@ main_api_router.include_router(customer_router, prefix="/customers", tags=["cust
 main_api_router.include_router(
     specialization_router, prefix="/specializations", tags=["specializations"]
 )
+main_api_router.include_router(login_router, prefix="/login", tags=["login"])
 
 app.include_router(main_api_router)
 
