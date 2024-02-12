@@ -7,7 +7,6 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
-
 from users.db_controller import UserDBController
 from users.services import UserService
 from utils.hasher import Hasher
