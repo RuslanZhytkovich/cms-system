@@ -7,6 +7,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
+
+from users.db_controller import UserDBController
 from users.services import UserService
 from utils.hasher import Hasher
 
@@ -17,7 +19,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/token")
 class AuthService:
     @staticmethod
     async def authenticate_user(email: str, password: str, db: AsyncSession):
-        user = await UserService.get_user_by_email(email=email, db=db)
+        user = await UserDBController.get_user_by_email(email=email, db=db)
         if user is None:
             return
         if not Hasher.verify_password(password, user.password):
@@ -41,7 +43,7 @@ class AuthService:
                 raise credentials_exception
         except JWTError:
             raise credentials_exception
-        user = await UserService.get_user_by_email(email=email, db=db)
+        user = await UserDBController.get_user_by_email(email=email, db=db)
         if user is None:
             raise credentials_exception
         return user
