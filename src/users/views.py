@@ -3,7 +3,6 @@ from typing import List
 
 from auth.services import AuthService
 from core.db import get_db
-from core.exceptions import InvalidPermissionsException
 from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,7 +11,6 @@ from users.schemas import CreateUserFullData
 from users.schemas import ShowUser
 from users.schemas import UpdateUser
 from users.services import UserService
-from utils.permissions import Permission
 
 user_router = APIRouter()
 
@@ -42,8 +40,6 @@ async def get_user_by_email(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    if not Permission.check_get_post_permissions(current_user=current_user):
-        raise InvalidPermissionsException
     return await UserService.get_user_by_email(
         email=email, db=db, current_user=current_user
     )

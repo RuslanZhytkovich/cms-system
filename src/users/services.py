@@ -17,7 +17,7 @@ class UserService:
     async def get_all_users_service(
         current_user: User, db: AsyncSession = Depends(get_db)
     ):
-        if not Permission.check_get_post_permissions(current_user=current_user):
+        if not Permission.check_admin_manager_permissions(current_user=current_user):
             raise InvalidPermissionsException
         return await UserDBController.get_all_users(db=db)
 
@@ -25,7 +25,7 @@ class UserService:
     async def get_user_by_email(
         current_user: User, email: str, db: AsyncSession = Depends(get_db)
     ):
-        if not Permission.check_get_post_permissions(current_user=current_user):
+        if not Permission.check_admin_manager_permissions(current_user=current_user):
             raise InvalidPermissionsException()
         return await UserDBController.get_user_by_email(email=email, db=db)
 
@@ -33,7 +33,7 @@ class UserService:
     async def get_user_by_id(
         current_user: User, user_id: uuid.UUID, db: AsyncSession = Depends(get_db)
     ):
-        if not Permission.check_get_post_permissions(current_user=current_user):
+        if not Permission.check_admin_manager_permissions(current_user=current_user):
             raise InvalidPermissionsException()
         return await UserDBController.get_user_by_id(user_id=user_id, db=db)
 

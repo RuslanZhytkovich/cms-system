@@ -12,6 +12,8 @@ from utils.hasher import Hasher
 class Permission:
     @staticmethod
     def check_delete_patch_permissions(current_user: User, target_user: User) -> bool:
+        if not current_user.is_active:
+            return False
         if (
             target_user.user_id == current_user.user_id
             or target_user.role == RoleEnum.admin
@@ -27,7 +29,9 @@ class Permission:
         return True
 
     @staticmethod
-    def check_get_post_permissions(current_user: User) -> bool:
+    def check_admin_manager_permissions(current_user: User) -> bool:
+        if not current_user.is_active:
+            return False
         if current_user.role == RoleEnum.developer:
             return False
         return True
