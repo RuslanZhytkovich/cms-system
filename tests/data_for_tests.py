@@ -43,9 +43,7 @@ test_get_specialization_data = [
     ("/specializations/get_all", 200, "admin"),
     ("/specializations/get_all", 200, "manager"),
     ("/specializations/get_all", 403, "developer"),
-
 ]
-
 
 
 test_soft_delete_specialization_data = [
@@ -74,20 +72,23 @@ test_create_customer = [
     ("/customers/create", 200, "manager"),
 ]
 
-
+test_create_project = [
+    ("/projects/create", 403, "developer"),
+    ("/projects/create", 200, "admin"),
+    ("/projects/create", 200, "manager"),
+]
 
 test_get_all_customers_data = [
     ("/customers/get_all", 403, "developer"),
     ("/customers/get_all", 200, "admin"),
     ("/customers/get_all", 200, "manager"),
-
 ]
 
 
 test_get_all_customers_by_id_data = [
-    ("/specializations/get_by_id/1", 403, "developer"),
-    ("/specializations/get_by_id/1", 200, "admin"),
-    ("/specializations/get_by_id/1", 200, "manager"),
+    ("/customers/get_by_id/1", 403, "developer"),
+    ("/customers/get_by_id/1", 200, "admin"),
+    ("/customers/get_by_id/1", 200, "manager"),
 ]
 
 test_get_specialization_by_id_data = [
@@ -104,21 +105,79 @@ test_customers_patch_data = [
 
 
 test_soft_delete_customers_data = [
-    ("/customers/soft_delete_api/1", 403, "developer"),
-    ("/customers/soft_delete_api/1", 200, "admin"),
-    ("/customers/soft_delete_api/1", 200, "manager"),
+    ("/customers/soft_delete/1", 403, "developer"),
+    ("/customers/soft_delete/1", 200, "admin"),
+    ("/customers/soft_delete/1", 200, "manager"),
 ]
 
 
 test_get_all_projects_data = [
-    ("/project/", 403, "developer"),
-    ("/project/", 200, "admin"),
-    ("/project/", 200, "manager"),
+    ("/projects/get_all", 403, "developer"),
+    ("/projects/get_all", 200, "admin"),
+    ("/projects/get_all", 200, "manager"),
 ]
+
 
 test_create_project = [
-    ("/project/", 403, "developer"),
-    ("/project/", 200, "admin"),
-    ("/project/", 200, "manager"),
+    ("/projects/create", 403, "developer"),
+    ("/projects/create", 200, "admin"),
+    ("/projects/create", 200, "manager"),
 ]
 
+test_get_project_by_id_data = [
+    ("/projects/get_by_id/1", 403, "developer"),
+    ("/projects/get_by_id/1", 200, "admin"),
+    ("/projects/get_by_id/1", 200, "manager"),
+]
+
+
+test_projects_patch_data = [
+    (
+        "admin",
+        {
+            "project_name": "new_proj_name1",
+            "start_date": "2024-02-14",
+            "end_date": "2024-02-14",
+            "is_finished": False,
+            "is_deleted": False,
+            "customer_id": 1,
+        },
+        200,
+    ),
+    (
+        "developer",
+        {
+            "project_name": "new_proj_name2",
+            "start_date": "2024-02-14",
+            "end_date": "2024-02-14",
+            "is_finished": False,
+            "is_deleted": False,
+            "customer_id": 1,
+        },
+        403,
+    ),
+    (
+        "manager",
+        {
+            "project_name": "new_proj_name3",
+            "start_date": "2024-02-14",
+            "end_date": "2024-02-14",
+            "is_finished": False,
+            "is_deleted": False,
+            "customer_id": 1,
+        },
+        200,
+    ),
+]
+
+test_soft_delete_projects_data = [
+    ("/projects/soft_delete/1", 403, "developer"),
+    ("/projects/soft_delete/2", 200, "admin"),
+    ("/projects/soft_delete/2", 200, "manager"),
+]
+
+test_create_report = [
+    ("/reports/create", 403, "developer"),
+    ("/reports/create", 200, "admin"),
+    ("/reports/create", 200, "manager"),
+]

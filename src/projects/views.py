@@ -4,7 +4,6 @@ from auth.services import AuthService
 from core.db import get_db
 from fastapi import APIRouter
 from fastapi import Depends
-from fastapi import HTTPException
 from projects.schemas import CreateProject
 from projects.schemas import ShowProject
 from projects.schemas import UpdateProject
@@ -23,9 +22,8 @@ async def get_all_projects(
 ):
 
     return await ProjectService.get_all_projects_service(
-        db, current_user=current_user
+        db=db, current_user=current_user
     )
-
 
 
 @project_router.get("/get_by_id/{project_id}", response_model=ShowProject)
@@ -52,7 +50,6 @@ async def delete_project_by_id(
     )
 
 
-
 @project_router.patch("/update_by_id/{project_id}", status_code=status.HTTP_200_OK)
 async def update_project_by_id(
     project_id: int,
@@ -76,7 +73,6 @@ async def soft_delete_project(
     return await ProjectService.soft_delete_project(
         project_id=project_id, db=db, current_user=current_user
     )
-
 
 
 @project_router.post("/create", response_model=ShowProject)
