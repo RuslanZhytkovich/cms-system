@@ -5,7 +5,7 @@ from auth.services import AuthService
 from core.db import get_db
 from core.security import create_access_token
 from core.settings import SETTINGS
-from fastapi import APIRouter
+from fastapi import APIRouter, Form
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import Request
@@ -15,13 +15,10 @@ from users.models import User
 
 login_router = APIRouter()
 
-
 @login_router.post("/token", response_model=Token)
-async def login_for_access_token(request: Request, db: AsyncSession = Depends(get_db)):
-    form_data = await request.json()
-    user = await AuthService.authenticate_user(
-        form_data["username"], form_data["password"], db
-    )
+async def login_for_access_token(request: Request, db: AsyncSession = Depends(get_db),
+                                 username: str = Form(...), password: str = Form(...)):
+    user = await AuthService.authenticate_user(username, password, db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

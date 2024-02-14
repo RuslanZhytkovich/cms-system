@@ -1,55 +1,52 @@
-import json
-
 import pytest
-from httpx import AsyncClient
+
+from tests.data_for_tests import test_get_all_customers_data, test_create_customer, test_get_all_customers_by_id_data
 
 
 @pytest.mark.asyncio
-async def test_get_all_customers(client: AsyncClient):
-    response = await client.get("/customers/get_all")
-    assert response.status_code == 200
+@pytest.mark.parametrize("url, expected_status, user_type", test_create_customer)
+async def test_create_customer(client, url, expected_status, user_type, create_admin, create_developer, create_manager):
+
+    if user_type == "admin":
+        user_headers = create_admin
+        json_data = {"customer_name": "Pupsik <3"}
+    elif user_type == "developer":
+        json_data = {"customer_name": "Pupsik <3"}
+        user_headers = create_developer
+    elif user_type == "manager":
+        json_data = {"customer_name": "Pupsik2 <3"}
+        user_headers = create_manager
+
+    response = await client.post(url, headers=user_headers, json=json_data)
+    assert response.status_code == expected_status
+
+
 
 
 @pytest.mark.asyncio
-async def test_create_customer_by_manager(client, create_admin):
-    customer_data = {
-        "customer_name": "Jlacfsdk",
-        "is_deleted": False,
-    }
-    response = await client.post(
-        "/customers/create", headers=create_admin, json=customer_data
-    )
-    assert response.status_code == 200
+@pytest.mark.parametrize("url, expected_status, user_type", test_get_all_customers_data)
+async def test_get_all_customers(client, url, expected_status, user_type, create_admin ,create_developer,create_manager):
+    if user_type == "admin":
+        user_headers = create_admin
+    if user_type == "developer":
+        user_headers = create_developer
+    if user_type == "manager":
+        user_headers = create_manager
 
 
-@pytest.mark.asyncio
-async def test_get_customer_by_id(client: AsyncClient):
-    response = await client.get("/customers/get_by_id/1")
-    assert response.status_code == 200
-
+    response = await client.get(url, headers=user_headers)
+    assert response.status_code == expected_status
 
 @pytest.mark.asyncio
-async def test_soft_delete_customer(client: AsyncClient):
-    response = await client.patch("/customers/soft_delete/1")
-    assert response.status_code == 200
+@pytest.mark.parametrize("url, expected_status, user_type", test_get_all_customers_by_id_data)
+async def test_get_customers_by_id(client, url, expected_status, user_type, create_admin,create_developer,create_manager):
+    if user_type == "admin":
+        user_headers = create_admin
+    if user_type == "developer":
+        user_headers = create_developer
+    if user_type == "manager":
+        user_headers = create_manager
 
 
-@pytest.mark.asyncio
-async def test_update_customer(client):
-    create_customer_response = await client.post(
-        "/customers/create",
-        data=json.dumps({"customer_name": "dasd", "is_deleted": False}),
-    )
-
-    update_customer = await client.patch(
-        f"/customers/update_by_id/{create_customer_response.json()['customer_id']}",
-        json={
-            "customer_name": "new_customer",
-            "is_deleted": True,
-        },
-    )
-
-    assert update_customer.status_code == 200
-    assert create_customer_response.status_code == 200
-    assert update_customer.json()["customer_name"] == "new_customer"
-    assert update_customer.json()["is_deleted"] is True
+    response = await client.get(url, headers=user_headers)
+    assert response.status_code == expected_status

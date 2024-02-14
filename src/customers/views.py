@@ -21,12 +21,11 @@ async def get_all_customers(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await CustomerService.get_all_customers_service(
-            db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return await CustomerService.get_all_customers_service(
+        db=db, current_user=current_user
+    )
+
 
 
 @customer_router.get("/get_by_id/{customer_id}", response_model=ShowCustomer)
@@ -35,12 +34,10 @@ async def get_customer_by_id(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await CustomerService.get_customer_by_id(
-            customer_id=customer_id, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return await CustomerService.get_customer_by_id(
+        customer_id=customer_id, db=db, current_user=current_user
+    )
 
 
 @customer_router.delete("/delete_by_id/{customer_id}", status_code=status.HTTP_200_OK)
@@ -49,12 +46,10 @@ async def delete_customer_by_id(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await CustomerService.delete_customer_by_id(
-            customer_id=customer_id, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return await CustomerService.delete_customer_by_id(
+        customer_id=customer_id, db=db, current_user=current_user
+    )
 
 
 @customer_router.patch("/update_by_id/{customer_id}", status_code=status.HTTP_200_OK)
@@ -64,12 +59,10 @@ async def update_customer_by_id(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await CustomerService.update_customer_by_id(
-            customer_id=customer_id, customer=customer, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return await CustomerService.update_customer_by_id(
+        customer_id=customer_id, customer=customer, db=db, current_user=current_user
+    )
+
 
 
 @customer_router.patch("/soft_delete/{customer_id}", status_code=status.HTTP_200_OK)
@@ -78,13 +71,10 @@ async def soft_delete_customer(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await CustomerService.soft_delete_customer(
-            customer_id=customer_id, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
+    return await CustomerService.soft_delete_customer(
+        customer_id=customer_id, db=db, current_user=current_user
+    )
 
 @customer_router.post("/create", response_model=ShowCustomer)
 async def create_customer(
@@ -92,9 +82,7 @@ async def create_customer(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await CustomerService.create_customer(
-            new_customer=new_customer, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return await CustomerService.create_customer(
+        new_customer=new_customer, db=db, current_user=current_user
+    )

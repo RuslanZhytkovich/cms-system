@@ -21,12 +21,11 @@ async def get_all_projects(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await ProjectService.get_all_projects_service(
-            db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return await ProjectService.get_all_projects_service(
+        db, current_user=current_user
+    )
+
 
 
 @project_router.get("/get_by_id/{project_id}", response_model=ShowProject)
@@ -35,12 +34,10 @@ async def get_project_by_id(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await ProjectService.get_project_by_id(
-            project_id=project_id, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=404, detail=str(e))
+
+    return await ProjectService.get_project_by_id(
+        project_id=project_id, db=db, current_user=current_user
+    )
 
 
 @project_router.delete("/delete_by_id/{project_id}", status_code=status.HTTP_200_OK)
@@ -49,12 +46,11 @@ async def delete_project_by_id(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await ProjectService.delete_project_by_id(
-            project_id=project_id, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return await ProjectService.delete_project_by_id(
+        project_id=project_id, db=db, current_user=current_user
+    )
+
 
 
 @project_router.patch("/update_by_id/{project_id}", status_code=status.HTTP_200_OK)
@@ -64,12 +60,10 @@ async def update_project_by_id(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await ProjectService.update_project_by_id(
-            project_id=project_id, project=project, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return await ProjectService.update_project_by_id(
+        project_id=project_id, project=project, db=db, current_user=current_user
+    )
 
 
 @project_router.patch("/soft_delete/{project_id}", status_code=status.HTTP_200_OK)
@@ -78,12 +72,11 @@ async def soft_delete_project(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await ProjectService.soft_delete_project(
-            project_id=project_id, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return await ProjectService.soft_delete_project(
+        project_id=project_id, db=db, current_user=current_user
+    )
+
 
 
 @project_router.post("/create", response_model=ShowProject)
@@ -92,9 +85,7 @@ async def create_project(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
-    try:
-        return await ProjectService.create_project(
-            new_project=new_project, db=db, current_user=current_user
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return await ProjectService.create_project(
+        new_project=new_project, db=db, current_user=current_user
+    )

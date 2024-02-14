@@ -7,7 +7,7 @@ from core.db import get_db
 from core.settings import SETTINGS
 from httpx import AsyncClient
 from main import app
-from sqlalchemy import insert
+from sqlalchemy import insert, select
 from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 from users.enums import RoleEnum
 from users.models import User
+from users.schemas import RegisterUser
 from utils.hasher import Hasher
 
 engine_test = create_async_engine(SETTINGS.TEST_DB_URL, poolclass=NullPool)
@@ -76,22 +77,38 @@ async def session(engine):
     async with async_session() as session:
         yield session
 
+@pytest_asyncio.fixture
+async def create_user(session, client):
+    async def _create_user(email, password, role):
+        user = RegisterUser(email=email, password=password)
+        existing_user = await session.execute(select(User).where(User.email == user.email))
 
-@pytest.fixture
-async def create_admin(session, client):
-    password = Hasher.get_password_hash("admin")
-    query = (
-        insert(User)
-        .values(email="admin@gmail.com", password=password, role=RoleEnum.admin)
-        .returning(User)
-    )
-    await session.execute(query)
-    await session.commit()
+        if existing_user.scalar() is None:
+            user.password = Hasher.get_password_hash(user.password)
+            query = insert(User).values(**user.dict(), role=role).returning(User)
+            await session.execute(query)
+            await session.commit()
 
-    payload = {"username": "admin@gmail.com", "password": "admin"}
-    response = await client.post("/login/token", json=payload)
-    print("11111", response)
-    response_data = response.json()
-    access_token = response_data["access_token"]
-    headers = {"Authorization": f"Bearer {access_token}"}
-    return headers
+        payload = {"username": user.email, "password": password}
+        response = await client.post("/login/token", data=payload)
+        response_data = response.json()
+        access_token = response_data.get("access_token")
+        headers = {"Authorization": f"Bearer {access_token}"}
+        return headers
+
+    return _create_user
+
+
+@pytest_asyncio.fixture
+async def create_admin(create_user):
+    return await create_user(email='admin@gmail.com', password='12345678', role=RoleEnum.admin)
+
+
+@pytest_asyncio.fixture
+async def create_manager(create_user):
+    return await create_user(email='manager@gmail.com', password='12345678', role=RoleEnum.manager)
+
+
+@pytest_asyncio.fixture
+async def create_developer(create_user):
+    return await create_user(email='developer@gmail.com', password='12345678', role=RoleEnum.developer)
