@@ -65,12 +65,10 @@ class SpecializationService:
 
     @staticmethod
     async def create_specialization(
-        current_user: User,
         new_specialization: CreateSpecialization,
         db: AsyncSession = Depends(get_db),
     ):
-        if not Permission.check_admin_manager_permissions(current_user=current_user):
-            raise InvalidPermissionsException()
+
         return await SpecializationDBController.create_specialization(
             new_specialization=new_specialization, db=db
         )

@@ -11,15 +11,15 @@ async def test_get_all_customers(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_create_customer(client: AsyncClient):
-    create_customer_response = await client.post(
-        "/customers/create",
-        json={
-            "customer_name": "Jlack",
-            "is_deleted": False,
-        },
+async def test_create_customer_by_manager(client, create_admin):
+    customer_data = {
+        "customer_name": "Jlacfsdk",
+        "is_deleted": False,
+    }
+    response = await client.post(
+        "/customers/create", headers=create_admin, json=customer_data
     )
-    assert create_customer_response.status_code == 200
+    assert response.status_code == 200
 
 
 @pytest.mark.asyncio

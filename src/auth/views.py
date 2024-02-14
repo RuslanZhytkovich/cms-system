@@ -8,8 +8,8 @@ from core.settings import SETTINGS
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from fastapi import Request
 from fastapi import status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from users.models import User
 
@@ -17,11 +17,10 @@ login_router = APIRouter()
 
 
 @login_router.post("/token", response_model=Token)
-async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)
-):
+async def login_for_access_token(request: Request, db: AsyncSession = Depends(get_db)):
+    form_data = await request.json()
     user = await AuthService.authenticate_user(
-        form_data.username, form_data.password, db
+        form_data["username"], form_data["password"], db
     )
     if not user:
         raise HTTPException(

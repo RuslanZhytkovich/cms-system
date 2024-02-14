@@ -101,11 +101,10 @@ async def soft_delete_specialization(
 async def create_specialization(
     new_specialization: CreateSpecialization,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
     try:
         return await SpecializationService.create_specialization(
-            new_specialization=new_specialization, db=db, current_user=current_user
+            new_specialization=new_specialization, db=db
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
