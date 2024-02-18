@@ -61,7 +61,6 @@ async def test_patch_specialization(client, user_type, payload, expected_status,
     assert response.status_code == expected_status
 
 
-
 @pytest.mark.asyncio
 @pytest.mark.parametrize("url, expected_status, user_type", test_soft_delete_specialization_data)
 async def test_soft_delete_specialization(client, url, expected_status, user_type, create_admin, create_developer,

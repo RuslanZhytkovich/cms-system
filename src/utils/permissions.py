@@ -32,6 +32,8 @@ class Permission:
             RoleEnum.admin,
         ):
             return False
+        if current_user.role == RoleEnum.admin and target_user.role == RoleEnum.admin:
+            return False
         if current_user.role == RoleEnum.developer:
             return False
         return True
@@ -44,18 +46,16 @@ class Permission:
             return False
         return True
 
+    @staticmethod
+    def check_admin_permissions(current_user: User) -> bool:
+        if not current_user.is_active:
+            return False
+        if current_user.role != RoleEnum.admin:
+            return False
+        return True
 
-def check_delete_patch_permissions(func: Callable):
-    @wraps(func)
-    async def wrapper(current_user: User, *args, **kwargs):
-        target_user = kwargs.get('target_user') or await UserDBController.get_user_by_id(kwargs.get('user_id'), db=kwargs.get('db'))
-        if not Permission.check_delete_patch_permissions(current_user=current_user, target_user=target_user):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Forbidden."
-            )
-        return await func(*args, **kwargs)
-    return wrapper
+
+
 
 
 def check_admin_manager_permission(func):

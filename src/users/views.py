@@ -7,7 +7,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from users.models import User
-from users.schemas import CreateUserFullData
+from users.schemas import CreateUserFullData, RegisterUser
 from users.schemas import ShowUser
 from users.schemas import UpdateUser
 from users.services import UserService
@@ -80,5 +80,9 @@ async def soft_delete(
 
 
 @user_router.post("/create")
-async def create_user(new_user: CreateUserFullData, db: AsyncSession = Depends(get_db)):
-    return await UserService.create_user(new_user=new_user, db=db)
+async def create_user_full_data(new_user: CreateUserFullData,
+                                db: AsyncSession = Depends(get_db),
+                                current_user: User = Depends(AuthService.get_current_user_from_token),):
+    return await UserService.create_user(new_user=new_user, db=db, current_user=current_user)
+
+

@@ -8,6 +8,7 @@ from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from users.db_controller import UserDBController
+from users.schemas import RegisterUser
 from users.services import UserService
 from utils.hasher import Hasher
 
@@ -46,3 +47,10 @@ class AuthService:
         if user is None:
             raise credentials_exception
         return user
+
+    @staticmethod
+    async def register_user(new_user: RegisterUser, db: AsyncSession = Depends(get_db)):
+        new_user.password = Hasher.get_password_hash(new_user.password)
+        return await UserDBController.register_user(new_user=new_user, db=db)
+
+

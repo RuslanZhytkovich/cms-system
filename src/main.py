@@ -1,7 +1,8 @@
+import os
 import subprocess
 
 import uvicorn
-from auth.views import login_router
+from auth.views import login_router, register_router
 from customers.views import customer_router
 from fastapi import FastAPI
 from fastapi.routing import APIRouter
@@ -20,11 +21,9 @@ main_api_router.include_router(user_router, prefix="/users", tags=["users"])
 main_api_router.include_router(project_router, prefix="/projects", tags=["projects"])
 main_api_router.include_router(report_router, prefix="/reports", tags=["reports"])
 main_api_router.include_router(customer_router, prefix="/customers", tags=["customers"])
-main_api_router.include_router(
-    specialization_router, prefix="/specializations", tags=["specializations"]
-)
+main_api_router.include_router(specialization_router, prefix="/specializations", tags=["specializations"])
 main_api_router.include_router(login_router, prefix="/login", tags=["login"])
-
+main_api_router.include_router(register_router, prefix="", tags=[])
 app.include_router(main_api_router)
 
 
@@ -33,5 +32,3 @@ async def before_startup():
     subprocess.run(["alembic", "upgrade", "heads"])
 
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="localhost", port=8000)

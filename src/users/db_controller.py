@@ -6,8 +6,10 @@ from sqlalchemy import insert
 from sqlalchemy import select
 from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from users.enums import RoleEnum
 from users.models import User
-from users.schemas import CreateUserFullData
+from users.schemas import CreateUserFullData, RegisterUser
 from users.schemas import UpdateUser
 
 
@@ -20,6 +22,14 @@ class UserDBController:
     @staticmethod
     async def create_user(new_user: CreateUserFullData, db: AsyncSession):
         query = insert(User).values(**new_user.dict()).returning(User)
+        result = await db.execute(query)
+        new_user = result.scalar()
+        await db.commit()
+        return new_user
+
+    @staticmethod
+    async def register_user(new_user: RegisterUser, db: AsyncSession):
+        query = insert(User).values(**new_user.dict(), role=RoleEnum.developer).returning(User)
         result = await db.execute(query)
         new_user = result.scalar()
         await db.commit()

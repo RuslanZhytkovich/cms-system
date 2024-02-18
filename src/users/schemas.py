@@ -1,5 +1,6 @@
 import uuid
 from datetime import date
+from typing import Optional
 
 from pydantic import BaseModel
 from pydantic import EmailStr
@@ -16,6 +17,11 @@ class BaseUser(BaseModel):
 
 class RegisterUser(BaseUser):
     pass
+
+
+
+class RegisterUserUUID(BaseUser):
+    user_id: uuid.UUID
 
 
 class CreateUserFullData(BaseUser):
@@ -37,3 +43,13 @@ class UpdateUser(CreateUserFullData):
 
 class ShowUser(CreateUserFullData):
     user_id: uuid.UUID
+    name: Optional[str] = None
+    last_name: Optional[str] = None
+    role: RoleEnum
+    telegram: Optional[str] = None
+    phone_number: Optional[str] = None
+    on_bench: bool = False
+    time_created: date
+    last_login: date
+    is_active: bool = True
+    specialization_id: Optional[int] = None

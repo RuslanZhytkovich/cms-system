@@ -12,8 +12,10 @@ from fastapi import Request
 from fastapi import status
 from sqlalchemy.ext.asyncio import AsyncSession
 from users.models import User
+from users.schemas import RegisterUser
 
 login_router = APIRouter()
+register_router = APIRouter()
 
 @login_router.post("/token", response_model=Token)
 async def login_for_access_token(request: Request, db: AsyncSession = Depends(get_db),
@@ -33,7 +35,12 @@ async def login_for_access_token(request: Request, db: AsyncSession = Depends(ge
 
 
 @login_router.get("/test_auth_endpoint")
-async def test_auth_endpoint(
+async def auth_endpoint(
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
     return {"Success": True, "current_user": current_user}
+
+
+@register_router.post("/register")
+async def register_user(new_user: RegisterUser, db: AsyncSession = Depends(get_db)):
+    return await AuthService.register_user(new_user=new_user, db=db)
