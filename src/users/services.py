@@ -6,6 +6,8 @@ from core.db import get_db
 from core.exceptions import InvalidPermissionsException
 from fastapi import Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.redis import RedisRepository
 from users.db_controller import UserDBController
 from users.enums import RoleEnum
 from users.models import User
@@ -19,7 +21,12 @@ class UserService:
     @staticmethod
     @check_admin_manager_permission
     async def get_all_users_service(current_user: User, db: AsyncSession = Depends(get_db)):
-        return await UserDBController.get_all_users(db=db)
+        users = await RedisRepository.get_value('users')
+        if not users:
+            users = await UserDBController.get_all_users(db=db)
+            await RedisRepository.set_value('users', users)
+        return users
+
 
     @staticmethod
     @check_admin_manager_permission

@@ -1,11 +1,11 @@
 import json
-from typing import List
+from typing import Any, List
 
 import redis.asyncio as redis
 from fastapi.encoders import jsonable_encoder
 
-from src.core import settings
-from src.core.exceptions import RequestProcessingException
+from core.exceptions import RequestProcessingException
+from core.settings import SETTINGS
 
 
 class RedisRepository:
@@ -14,9 +14,8 @@ class RedisRepository:
     @classmethod
     async def connect_to_redis(cls):
         if cls.__redis is None:
-            cls.__redis = await redis.from_url(
-                settings.REDIS_URL, decode_responses=True
-            )
+            # Assuming SETTINGS.REDIS_URL contains the URL of your Redis database
+            cls.__redis = await redis.from_url(SETTINGS.REDIS_URL, decode_responses=True)
 
     @classmethod
     async def clear_key(cls, key: str):

@@ -4,6 +4,7 @@ import subprocess
 import uvicorn
 from auth.views import login_router, register_router
 from core.exception_handler import include_exceptions_to_app
+from core.redis import RedisRepository
 from customers.views import customer_router
 from fastapi import FastAPI
 from fastapi.routing import APIRouter
@@ -33,4 +34,6 @@ app.include_router(register_router, tags=['register'])
 async def before_startup():
     subprocess.run(["alembic", "upgrade", "heads"])
 
-
+@app.on_event("startup")
+async def startup_event():
+    await RedisRepository.connect_to_redis()
