@@ -31,17 +31,9 @@ class InvalidArgument(Exception):
     pass
 
 
-class EntityAlreadyExist(Exception):
-    pass
-
-
-class EntityNotFoundException(Exception):
-    pass
-
-
-class Unauthorized(Exception):
-    pass
-
-
 class RequestProcessingException(Exception):
+    pass
+
+
+class InvalidFileType(Exception):
     pass
