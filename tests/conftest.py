@@ -4,11 +4,13 @@ import pytest
 import pytest_asyncio
 from core.base import Base
 from core.db import get_db
+from core.redis_repository import RedisRepository
 from core.settings import SETTINGS
 from httpx import AsyncClient
 from main import app
-from sqlalchemy import insert, select
+from sqlalchemy import insert
 from sqlalchemy import NullPool
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -63,9 +65,7 @@ async def create(engine):
 @pytest_asyncio.fixture
 async def client(event_loop, create):
     async with AsyncClient(app=app, base_url="http://0.0.0.0:8000") as ac:
-        # await RedisRepository.connect_to_redis()
-        pass
-
+        await RedisRepository.connect_to_redis()
         yield ac
 
 
@@ -77,11 +77,14 @@ async def session(engine):
     async with async_session() as session:
         yield session
 
+
 @pytest_asyncio.fixture
 async def create_user(session, client):
     async def _create_user(user_id, email, password, role):
         user = RegisterUserUUID(user_id=user_id, email=email, password=password)
-        existing_user = await session.execute(select(User).where(User.email == user.email))
+        existing_user = await session.execute(
+            select(User).where(User.email == user.email)
+        )
 
         if existing_user.scalar() is None:
             user.password = Hasher.get_password_hash(user.password)
@@ -101,43 +104,89 @@ async def create_user(session, client):
 
 @pytest_asyncio.fixture
 async def create_admin(create_user):
-    return await create_user(user_id ="eab83dd2-8d2d-434e-9916-6d8608aca8e6", email='admin@gmail.com', password='12345678', role=RoleEnum.admin)
+    return await create_user(
+        user_id="eab83dd2-8d2d-434e-9916-6d8608aca8e6",
+        email="admin@gmail.com",
+        password="12345678",
+        role=RoleEnum.admin,
+    )
 
 
 @pytest_asyncio.fixture
 async def create_manager(create_user):
-    return await create_user(user_id ="eab73dd2-8d2d-434e-9916-6d8608aca8e6",email='manager@gmail.com', password='12345678', role=RoleEnum.manager)
+    return await create_user(
+        user_id="eab73dd2-8d2d-434e-9916-6d8608aca8e6",
+        email="manager@gmail.com",
+        password="12345678",
+        role=RoleEnum.manager,
+    )
+
 
 @pytest_asyncio.fixture
 async def create_developer(create_user):
-    return await create_user(user_id ="eab93dd2-8d2d-434e-9916-6d8608aca8e6",email='developer@gmail.com', password='12345678', role=RoleEnum.developer)
+    return await create_user(
+        user_id="eab93dd2-8d2d-434e-9916-6d8608aca8e6",
+        email="developer@gmail.com",
+        password="12345678",
+        role=RoleEnum.developer,
+    )
 
 
 @pytest_asyncio.fixture
 async def create_developer_for_patch(create_user):
-    return await create_user(user_id ="eab94dd2-8d2d-434e-9916-6d8608aca8e6",email='developerpatch@gmail.com', password='12345678', role=RoleEnum.developer)
+    return await create_user(
+        user_id="eab94dd2-8d2d-434e-9916-6d8608aca8e6",
+        email="developerpatch@gmail.com",
+        password="12345678",
+        role=RoleEnum.developer,
+    )
 
 
 @pytest_asyncio.fixture
 async def create_manager_for_patch(create_user):
-    return await create_user(user_id ="eab75dd2-8d2d-434e-9916-6d8608aca8e6",email='manager@gmail.com', password='12345678', role=RoleEnum.manager)
+    return await create_user(
+        user_id="eab75dd2-8d2d-434e-9916-6d8608aca8e6",
+        email="manager@gmail.com",
+        password="12345678",
+        role=RoleEnum.manager,
+    )
 
 
 @pytest_asyncio.fixture
 async def create_admin_for_patch(create_user):
-    return await create_user(user_id ="eab32dd2-8d2d-434e-9916-6d8608aca8e6",email='adminpatch@gmail.com', password='12345678', role=RoleEnum.admin)
+    return await create_user(
+        user_id="eab32dd2-8d2d-434e-9916-6d8608aca8e6",
+        email="adminpatch@gmail.com",
+        password="12345678",
+        role=RoleEnum.admin,
+    )
 
 
 @pytest_asyncio.fixture
 async def create_developer_for_soft_delete(create_user):
-    return await create_user(user_id ="eab16dd2-8d2d-434e-9916-6d8608aca8e6",email='developerpatch@gmail.com', password='12345678', role=RoleEnum.developer)
+    return await create_user(
+        user_id="eab16dd2-8d2d-434e-9916-6d8608aca8e6",
+        email="developerpatch@gmail.com",
+        password="12345678",
+        role=RoleEnum.developer,
+    )
 
 
 @pytest_asyncio.fixture
 async def create_manager_for_soft_delete(create_user):
-    return await create_user(user_id ="eab14dd2-8d2d-434e-9916-6d8608aca8e6",email='manager@gmail.com', password='12345678', role=RoleEnum.manager)
+    return await create_user(
+        user_id="eab14dd2-8d2d-434e-9916-6d8608aca8e6",
+        email="manager@gmail.com",
+        password="12345678",
+        role=RoleEnum.manager,
+    )
 
 
 @pytest_asyncio.fixture
 async def create_admin_for_soft_delete(create_user):
-    return await create_user(user_id ="eab14dd2-8d2d-434e-9916-6d8608aca8e6",email='adminpatch@gmail.com', password='12345678', role=RoleEnum.admin)
+    return await create_user(
+        user_id="eab14dd2-8d2d-434e-9916-6d8608aca8e6",
+        email="adminpatch@gmail.com",
+        password="12345678",
+        role=RoleEnum.admin,
+    )

@@ -1,5 +1,6 @@
 import jwt
 from core.db import get_db
+from core.redis_repository import RedisRepository
 from core.settings import SETTINGS
 from fastapi import Depends
 from fastapi import HTTPException
@@ -9,7 +10,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from users.db_controller import UserDBController
 from users.schemas import RegisterUser
-from users.services import UserService
 from utils.hasher import Hasher
 
 
@@ -51,6 +51,5 @@ class AuthService:
     @staticmethod
     async def register_user(new_user: RegisterUser, db: AsyncSession = Depends(get_db)):
         new_user.password = Hasher.get_password_hash(new_user.password)
+        await RedisRepository.clear_key("users")
         return await UserDBController.register_user(new_user=new_user, db=db)
-
-
