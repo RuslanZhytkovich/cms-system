@@ -1,5 +1,6 @@
 import jwt
 from core.db import get_db
+from core.exceptions import UserAlreadyExist
 from core.redis_repository import RedisRepository
 from core.settings import SETTINGS
 from fastapi import Depends
@@ -50,6 +51,10 @@ class AuthService:
 
     @staticmethod
     async def register_user(new_user: RegisterUser, db: AsyncSession = Depends(get_db)):
+        db_user = await UserDBController.get_user_by_email(email=new_user.email, db=db)
+        if db_user:
+            raise UserAlreadyExist
+
         new_user.password = Hasher.get_password_hash(new_user.password)
         await RedisRepository.clear_key("users")
         return await UserDBController.register_user(new_user=new_user, db=db)
