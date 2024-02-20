@@ -1,4 +1,4 @@
-version: "3.0"
+version: "3.8"
 services:
   db:
     container_name: "db"
@@ -29,5 +29,7 @@ services:
       - 6379:6379
 
 
+
+
 volumes:
-    cms_app:
+  cms_app:

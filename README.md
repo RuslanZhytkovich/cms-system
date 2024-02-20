@@ -41,6 +41,5 @@ pytest
 
 pre-commit run --all-files
 
-pre-commit run --all-files
-
-pre-commit run --all-files
+to run celery: celery -A background-tasks.tasks:celery worker
+to run flower: celery -A background-tasks.tasks:celery flower
