@@ -1,6 +1,7 @@
 import uuid
 
 from core.db import get_db
+from core.exceptions import AlreadyExist
 from core.redis_repository import RedisRepository
 from fastapi import Depends
 from fastapi import HTTPException
@@ -106,6 +107,10 @@ class UserService:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden."
             )
+
+        db_user = await UserDBController.get_user_by_email(email=new_user.email, db=db)
+        if db_user:
+            raise AlreadyExist
 
         new_user.password = Hasher.get_password_hash(new_user.password)
         await RedisRepository.clear_key("users")

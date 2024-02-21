@@ -1,8 +1,8 @@
-class UserAlreadyExist(Exception):
+class AlreadyExist(Exception):
     pass
 
 
-class UserNotFoundException(Exception):
+class NotFoundException(Exception):
     def __init__(self, value):
         self.value = value
 
