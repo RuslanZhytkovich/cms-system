@@ -16,7 +16,7 @@ class CustomerService:
     @staticmethod
     @check_admin_manager_permission
     async def get_all_customers_service(
-        current_user: User, db: AsyncSession = Depends(get_db)
+        current_user: User, db: AsyncSession
     ):
 
         if cache := await RedisRepository.get_from_redis("customers"):
@@ -34,7 +34,7 @@ class CustomerService:
     @staticmethod
     @check_admin_manager_permission
     async def get_customer_by_id(
-        current_user: User, customer_id: int, db: AsyncSession = Depends(get_db)
+        current_user: User, customer_id: int, db: AsyncSession
     ):
         cache = await RedisRepository.get_from_redis(f"customer{customer_id}")
         if cache:
@@ -56,7 +56,7 @@ class CustomerService:
     @staticmethod
     @check_admin_manager_permission
     async def get_customer_by_name(
-            current_user: User, customer_name: str, db: AsyncSession = Depends(get_db)
+            current_user: User, customer_name: str, db: AsyncSession
     ):
         customer = await CustomerDBController.get_customer_by_name(db=db, customer_name=customer_name)
         if not customer:
@@ -66,7 +66,7 @@ class CustomerService:
     @staticmethod
     @check_admin_manager_permission
     async def delete_customer_by_id(
-        current_user: User, customer_id: int, db: AsyncSession = Depends(get_db)
+        current_user: User, customer_id: int, db: AsyncSession
     ):
         customer = await CustomerDBController.get_customer_by_id(db=db, customer_id=customer_id)
         if not customer:
@@ -83,10 +83,10 @@ class CustomerService:
         current_user: User,
         customer_id: int,
         customer: UpdateCustomer,
-        db: AsyncSession = Depends(get_db),
+        db: AsyncSession
     ):
-        customer = await CustomerDBController.get_customer_by_id(db=db, customer_id=customer_id)
-        if not customer:
+        customer_from_db = await CustomerDBController.get_customer_by_id(db=db, customer_id=customer_id)
+        if not customer_from_db:
             raise NotFoundException
         await RedisRepository.clear_key("customers")
         await RedisRepository.clear_key(f"customer{customer_id}")
@@ -97,7 +97,7 @@ class CustomerService:
     @staticmethod
     @check_admin_manager_permission
     async def soft_delete_customer(
-        current_user: User, customer_id: int, db: AsyncSession = Depends(get_db)
+        current_user: User, customer_id: int, db: AsyncSession
     ):
         customer = await CustomerDBController.get_customer_by_id(db=db, customer_id=customer_id)
         if not customer:
@@ -111,7 +111,7 @@ class CustomerService:
     async def create_customer(
         current_user: User,
         new_customer: CreateCustomer,
-        db: AsyncSession = Depends(get_db),
+        db: AsyncSession
     ):
         customer = await CustomerDBController.get_customer_by_name(db=db, customer_name=new_customer.customer_name)
 

@@ -75,6 +75,7 @@ class CustomerDBController:
             await db.commit()
             return updated
         except Exception as e:
+            print(1111)
             raise DatabaseException(str(e))
 
     @staticmethod

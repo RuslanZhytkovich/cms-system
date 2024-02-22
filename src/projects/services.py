@@ -16,7 +16,7 @@ class ProjectService:
     @staticmethod
     @check_admin_manager_permission
     async def get_all_projects_service(
-        current_user: User, db: AsyncSession = Depends(get_db)
+        current_user: User, db: AsyncSession
     ):
         if cache := await RedisRepository.get_from_redis("projects"):
 
@@ -33,7 +33,7 @@ class ProjectService:
     @staticmethod
     @check_admin_manager_permission
     async def get_project_by_id(
-        current_user: User, project_id: int, db: AsyncSession = Depends(get_db)
+        current_user: User, project_id: int, db: AsyncSession
     ):
         if cache := await RedisRepository.get_from_redis(f"project{project_id}"):
             return Project(**jsonable_encoder(cache))
@@ -51,7 +51,7 @@ class ProjectService:
     @staticmethod
     @check_admin_manager_permission
     async def get_project_by_name(
-            current_user: User, project_name: str, db: AsyncSession = Depends(get_db)
+            current_user: User, project_name: str, db: AsyncSession
     ):
         project = await ProjectDBController.get_project_by_name(project_name=project_name, db=db)
         if not project:
@@ -61,7 +61,7 @@ class ProjectService:
     @staticmethod
     @check_admin_manager_permission
     async def delete_project_by_id(
-        current_user: User, project_id: int, db: AsyncSession = Depends(get_db)
+        current_user: User, project_id: int, db: AsyncSession
     ):
         project = await ProjectDBController.get_project_by_id(project_id=project_id, db=db)
         if not project:
@@ -79,10 +79,10 @@ class ProjectService:
         current_user: User,
         project_id: int,
         project: UpdateProject,
-        db: AsyncSession = Depends(get_db),
+        db: AsyncSession
     ):
-        project = await ProjectDBController.get_project_by_id(project_id=project_id, db=db)
-        if not project:
+        project_from_db = await ProjectDBController.get_project_by_id(project_id=project_id, db=db)
+        if not project_from_db:
             raise NotFoundException
         await RedisRepository.clear_key("projects")
         await RedisRepository.clear_key(f"project{project_id}")
@@ -93,7 +93,7 @@ class ProjectService:
     @staticmethod
     @check_admin_manager_permission
     async def soft_delete_project(
-        current_user: User, project_id: int, db: AsyncSession = Depends(get_db)
+        current_user: User, project_id: int, db: AsyncSession
     ):
         project = await ProjectDBController.get_project_by_id(project_id=project_id, db=db)
         if not project:
@@ -107,7 +107,7 @@ class ProjectService:
     async def create_project(
         current_user: User,
         new_project: CreateProject,
-        db: AsyncSession = Depends(get_db),
+        db: AsyncSession
     ):
         project = await ProjectDBController.get_project_by_name(project_name=new_project.project_name, db=db)
         if project:

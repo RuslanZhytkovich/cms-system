@@ -16,7 +16,7 @@ class SpecializationService:
     @staticmethod
     @check_admin_manager_permission
     async def get_all_specializations_service(
-        current_user: User, db: AsyncSession = Depends(get_db)
+        current_user: User, db: AsyncSession
     ):
         if cache := await RedisRepository.get_from_redis("specializations"):
 
@@ -40,7 +40,7 @@ class SpecializationService:
     @staticmethod
     @check_admin_manager_permission
     async def get_specialization_by_id(
-        current_user: User, specialization_id: int, db: AsyncSession = Depends(get_db)
+        current_user: User, specialization_id: int, db: AsyncSession
     ):
         if cache := await RedisRepository.get_from_redis(
             f"specialization{specialization_id}"
@@ -62,7 +62,7 @@ class SpecializationService:
     @staticmethod
     @check_admin_manager_permission
     async def get_specialization_by_name(
-            current_user: User, specialization_name: str, db: AsyncSession = Depends(get_db)
+            current_user: User, specialization_name: str, db: AsyncSession
     ):
         specialization = await SpecializationDBController.get_specialization_by_name(specialization_name=specialization_name, db=db)
         if not specialization:
@@ -72,7 +72,7 @@ class SpecializationService:
     @staticmethod
     @check_admin_manager_permission
     async def delete_specialization_by_id(
-        current_user: User, specialization_id: int, db: AsyncSession = Depends(get_db)
+        current_user: User, specialization_id: int, db: AsyncSession
     ):
         specialization = await SpecializationDBController.get_specialization_by_id(specialization_id=specialization_id, db=db)
         if not specialization:
@@ -89,11 +89,11 @@ class SpecializationService:
         current_user: User,
         specialization_id: int,
         specialization: UpdateSpecialization,
-        db: AsyncSession = Depends(get_db),
+        db: AsyncSession
     ):
-        specialization = await SpecializationDBController.get_specialization_by_id(specialization_id=specialization_id,
+        specialization_from_db = await SpecializationDBController.get_specialization_by_id(specialization_id=specialization_id,
                                                                                    db=db)
-        if not specialization:
+        if not specialization_from_db:
             raise NotFoundException
         await RedisRepository.clear_key("specializations")
         await RedisRepository.clear_key(f"specialization{specialization_id}")
@@ -104,7 +104,7 @@ class SpecializationService:
     @staticmethod
     @check_admin_manager_permission
     async def soft_delete_specialization(
-        current_user: User, specialization_id: int, db: AsyncSession = Depends(get_db)
+        current_user: User, specialization_id: int, db: AsyncSession
     ):
         specialization = await SpecializationDBController.get_specialization_by_id(specialization_id=specialization_id,
                                                                                    db=db)
@@ -121,7 +121,7 @@ class SpecializationService:
     async def create_specialization(
         current_user: User,
         new_specialization: CreateSpecialization,
-        db: AsyncSession = Depends(get_db),
+        db: AsyncSession
     ):
         specialization = await SpecializationDBController.get_specialization_by_name(specialization_name=new_specialization.specialization_name, db=db)
         if specialization:

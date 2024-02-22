@@ -20,9 +20,7 @@ from utils.permissions import Permission
 class UserService:
     @staticmethod
     @check_admin_manager_permission
-    async def get_all_users_service(
-        current_user: User, db: AsyncSession = Depends(get_db)
-    ):
+    async def get_all_users_service(current_user: User, db: AsyncSession):
         if cache := await RedisRepository.get_from_redis("users"):
 
             return [User(**user) for user in jsonable_encoder(cache)]
@@ -38,25 +36,23 @@ class UserService:
     @staticmethod
     @check_admin_manager_permission
     async def get_user_by_email(
-        current_user: User, email: str, db: AsyncSession = Depends(get_db)
-    ):
+        current_user: User, email: str, db: AsyncSession):
         user = await UserDBController.get_user_by_email(email=email, db=db)
         if not user:
             raise NotFoundException
 
     @staticmethod
     @check_admin_manager_permission
-    async def get_user_by_id(
-        current_user: User, user_id: uuid.UUID, db: AsyncSession = Depends(get_db)
-    ):
+    async def get_user_by_id(current_user: User, user_id: uuid.UUID, db: AsyncSession):
 
         user = await UserDBController.get_user_by_id(user_id=user_id, db=db)
         if not user:
             raise NotFoundException
+        return user
 
     @staticmethod
     async def delete_user_by_id(
-        current_user: User, user_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+        current_user: User, user_id: uuid.UUID, db: AsyncSession
     ):
         target_user = await UserDBController.get_user_by_id(user_id=user_id, db=db)
         if not Permission.check_delete_patch_permissions(
@@ -76,7 +72,7 @@ class UserService:
         current_user: User,
         user_id: uuid.UUID,
         user_to_update: UpdateUser,
-        db: AsyncSession = Depends(get_db),
+        db: AsyncSession,
     ):
         target_user = await UserDBController.get_user_by_id(user_id=user_id, db=db)
         if not Permission.check_delete_patch_permissions(
@@ -94,7 +90,7 @@ class UserService:
 
     @staticmethod
     async def soft_delete_user(
-        current_user: User, user_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+        current_user: User, user_id: uuid.UUID, db: AsyncSession
     ):
         target_user = await UserDBController.get_user_by_id(user_id=user_id, db=db)
         if not Permission.check_delete_patch_permissions(
@@ -112,7 +108,7 @@ class UserService:
     async def create_user(
         current_user: User,
         new_user: CreateUserFullData,
-        db: AsyncSession = Depends(get_db),
+        db: AsyncSession ,
     ):
         if not Permission.check_admin_permissions(current_user=current_user):
             raise HTTPException(
