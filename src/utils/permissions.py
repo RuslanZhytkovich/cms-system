@@ -15,6 +15,10 @@ from utils.hasher import Hasher
 class Permission:
     @staticmethod
     def check_delete_patch_permissions(current_user: User, target_user: User) -> bool:
+        if current_user.role == RoleEnum.developer:
+            return False
+        if current_user is None or target_user is None:
+            raise NotFoundException
         if not current_user.is_active:
             return False
         if (
@@ -29,12 +33,13 @@ class Permission:
             return False
         if current_user.role == RoleEnum.admin and target_user.role == RoleEnum.admin:
             return False
-        if current_user.role == RoleEnum.developer:
-            return False
+
         return True
 
     @staticmethod
     def check_admin_manager_permissions(current_user: User) -> bool:
+        if current_user is None:
+            raise NotFoundException
         if not current_user.is_active:
             return False
         if current_user.role == RoleEnum.developer:
@@ -43,6 +48,8 @@ class Permission:
 
     @staticmethod
     def check_admin_permissions(current_user: User) -> bool:
+        if current_user is None:
+            raise NotFoundException
         if not current_user.is_active:
             return False
         if current_user.role != RoleEnum.admin:

@@ -1,6 +1,6 @@
 import pytest
 
-from tests.data_for_tests import test_create_customer
+from tests.data_for_tests import test_create_customer, test_create_customer_already_exist
 from tests.data_for_tests import test_customers_patch_data
 from tests.data_for_tests import test_get_all_customers_by_id_data
 from tests.data_for_tests import test_get_all_customers_data
@@ -21,15 +21,42 @@ async def test_create_customer(
 
     if user_type == "admin":
         user_headers = create_admin
-        json_data = {"customer_name": "Pupsik <3"}
+        json_data = {"customer_name": "Customer1"}
     elif user_type == "developer":
-        json_data = {"customer_name": "Pupsik <3"}
+        json_data = {"customer_name": "Customer2"}
         user_headers = create_developer
     elif user_type == "manager":
-        json_data = {"customer_name": "Pupsik2 <3"}
+        json_data = {"customer_name": "Customer3"}
         user_headers = create_manager
 
     response = await client.post(url, headers=user_headers, json=json_data)
+
+    assert response.status_code == expected_status
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("url, expected_status, user_type", test_create_customer_already_exist)
+async def test_create_customer_already_exist(
+        client,
+        url,
+        expected_status,
+        user_type,
+        create_admin,
+        create_developer,
+        create_manager,
+):
+    if user_type == "admin":
+        user_headers = create_admin
+        json_data = {"customer_name": "Customer1"}
+    elif user_type == "developer":
+        json_data = {"customer_name": "Customer2"}
+        user_headers = create_developer
+    elif user_type == "manager":
+        json_data = {"customer_name": "Customer3"}
+        user_headers = create_manager
+
+    response = await client.post(url, headers=user_headers, json=json_data)
+
     assert response.status_code == expected_status
 
 
@@ -78,6 +105,8 @@ async def test_get_customers_by_id(
     assert response.status_code == expected_status
 
 
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "user_type, payload, expected_status", test_customers_patch_data
@@ -101,6 +130,7 @@ async def test_patch_customers(
     response = await client.patch(
         "/customers/update_by_id/1", json=payload, headers=user_headers
     )
+
     assert response.status_code == expected_status
 
 

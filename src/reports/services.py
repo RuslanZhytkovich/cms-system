@@ -1,5 +1,5 @@
 from core.db import get_db
-from core.exceptions import InvalidPermissionsException
+from core.exceptions import InvalidPermissionsException, NotFoundException
 from fastapi import Depends
 from reports.db_controller import ReportDBController
 from reports.schemas import CreateReport
@@ -22,13 +22,20 @@ class ReportService:
     async def get_report_by_id(
         current_user: User, report_id: int, db: AsyncSession
     ):
-        return await ReportDBController.get_report_by_id(report_id=report_id, db=db)
+        report = await ReportDBController.get_report_by_id(report_id=report_id, db=db)
+        if not report:
+            raise NotFoundException
+        return report
 
     @staticmethod
     @check_admin_manager_permission
     async def delete_report_by_id(
         current_user: User, report_id: int, db: AsyncSession
     ):
+        report_from_db = await ReportDBController.get_report_by_id(report_id=report_id, db=db)
+        if not report_from_db:
+            raise NotFoundException
+
         return await ReportDBController.delete_report_by_id(report_id=report_id, db=db)
 
     @staticmethod
@@ -39,6 +46,9 @@ class ReportService:
         report: UpdateReport,
         db: AsyncSession
     ):
+        report_from_db = await ReportDBController.get_report_by_id(report_id=report_id, db=db)
+        if not report_from_db:
+            raise NotFoundException
         return await ReportDBController.update_report_by_id(
             report_id=report_id, report=report, db=db
         )
@@ -48,6 +58,9 @@ class ReportService:
     async def soft_delete_report(
         current_user: User, report_id: int, db: AsyncSession
     ):
+        report_from_db = await ReportDBController.get_report_by_id(report_id=report_id, db=db)
+        if not report_from_db:
+            raise NotFoundException
         return await ReportDBController.soft_delete(report_id=report_id, db=db)
 
     @staticmethod
