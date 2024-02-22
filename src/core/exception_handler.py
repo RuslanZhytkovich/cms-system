@@ -18,16 +18,16 @@ async def duplicate_entity_exception_handler(
 ) -> Response:
     return JSONResponse(
         status_code=status.HTTP_409_CONFLICT,
-        content={"detail": "An entity with this data already exist."},
+        content={"detail": "An entity with this data already exists."},
     )
 
 
-async def user_not_found_exception_handler(
+async def not_found_exception_handler(
     request: Request, exc: NotFoundException
 ) -> Response:
     return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content={"detail": f"There is no user with this data: {exc}"},
+        status_code=status.HTTP_404_NOT_FOUND,
+        content={"detail": f"Entity not found: {exc}"},
     )
 
 
@@ -75,7 +75,7 @@ async def invalid_file_type_exception_handler(
 
 def include_exceptions_to_app(app: FastAPI):
     app.add_exception_handler(AlreadyExist, duplicate_entity_exception_handler)
-    app.add_exception_handler(NotFoundException, user_not_found_exception_handler)
+    app.add_exception_handler(NotFoundException, not_found_exception_handler)
     app.add_exception_handler(
         InvalidCredentialsException, invalid_credentials_exception_handler
     )

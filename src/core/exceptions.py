@@ -3,8 +3,7 @@ class AlreadyExist(Exception):
 
 
 class NotFoundException(Exception):
-    def __init__(self, value):
-        self.value = value
+    pass
 
 
 class InvalidCredentialsException(Exception):

@@ -1,4 +1,5 @@
 from core.db import get_db
+from core.exceptions import NotFoundException, AlreadyExist
 from core.redis_repository import RedisRepository
 from fastapi import Depends
 from fastapi.encoders import jsonable_encoder
@@ -49,6 +50,8 @@ class SpecializationService:
             specialization = await SpecializationDBController.get_specialization_by_id(
                 specialization_id=specialization_id, db=db
             )
+            if not specialization:
+                raise NotFoundException
             await RedisRepository.set_to_redis(
                 key=f"specialization{specialization_id}",
                 value=jsonable_encoder(specialization),
@@ -58,9 +61,22 @@ class SpecializationService:
 
     @staticmethod
     @check_admin_manager_permission
+    async def get_specialization_by_name(
+            current_user: User, specialization_name: str, db: AsyncSession = Depends(get_db)
+    ):
+        specialization = await SpecializationDBController.get_specialization_by_name(specialization_name=specialization_name, db=db)
+        if not specialization:
+            raise NotFoundException
+        return specialization
+
+    @staticmethod
+    @check_admin_manager_permission
     async def delete_specialization_by_id(
         current_user: User, specialization_id: int, db: AsyncSession = Depends(get_db)
     ):
+        specialization = await SpecializationDBController.get_specialization_by_id(specialization_id=specialization_id, db=db)
+        if not specialization:
+            raise NotFoundException
         await RedisRepository.clear_key("specializations")
         await RedisRepository.clear_key(f"specialization{specialization_id}")
         return await SpecializationDBController.delete_specialization_by_id(
@@ -75,6 +91,10 @@ class SpecializationService:
         specialization: UpdateSpecialization,
         db: AsyncSession = Depends(get_db),
     ):
+        specialization = await SpecializationDBController.get_specialization_by_id(specialization_id=specialization_id,
+                                                                                   db=db)
+        if not specialization:
+            raise NotFoundException
         await RedisRepository.clear_key("specializations")
         await RedisRepository.clear_key(f"specialization{specialization_id}")
         return await SpecializationDBController.update_specialization_by_id(
@@ -86,6 +106,10 @@ class SpecializationService:
     async def soft_delete_specialization(
         current_user: User, specialization_id: int, db: AsyncSession = Depends(get_db)
     ):
+        specialization = await SpecializationDBController.get_specialization_by_id(specialization_id=specialization_id,
+                                                                                   db=db)
+        if not specialization:
+            raise NotFoundException
         await RedisRepository.clear_key("specializations")
         await RedisRepository.clear_key(f"specialization{specialization_id}")
         return await SpecializationDBController.soft_delete(
@@ -99,6 +123,9 @@ class SpecializationService:
         new_specialization: CreateSpecialization,
         db: AsyncSession = Depends(get_db),
     ):
+        specialization = await SpecializationDBController.get_specialization_by_name(specialization_name=new_specialization.specialization_name, db=db)
+        if specialization:
+            raise AlreadyExist
         await RedisRepository.clear_key("specializations")
         return await SpecializationDBController.create_specialization(
             new_specialization=new_specialization, db=db

@@ -28,6 +28,15 @@ class ProjectDBController:
             raise DatabaseException(str(e))
 
     @staticmethod
+    async def get_project_by_name(db: AsyncSession, project_name: str):
+        try:
+            query = select(Project).where(Project.project_name == project_name)
+            customer = await db.execute(query)
+            return customer.scalar()
+        except Exception as e:
+            raise DatabaseException(str(e))
+
+    @staticmethod
     async def delete_project_by_id(db: AsyncSession, project_id: int):
         try:
             query = delete(Project).where(Project.project_id == project_id)

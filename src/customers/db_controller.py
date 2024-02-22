@@ -27,6 +27,18 @@ class CustomerDBController:
         except Exception as e:
             raise DatabaseException(str(e))
 
+
+    @staticmethod
+    async def get_customer_by_name(db: AsyncSession, customer_name: str):
+        try:
+            query = select(Customer).where(Customer.customer_name == customer_name)
+            customer = await db.execute(query)
+            return customer.scalar()
+        except Exception as e:
+            raise DatabaseException(str(e))
+
+
+
     @staticmethod
     async def delete_customer_by_id(db: AsyncSession, customer_id: int):
         try:

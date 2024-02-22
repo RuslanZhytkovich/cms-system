@@ -1,4 +1,5 @@
 from core.db import get_db
+from core.exceptions import NotFoundException, AlreadyExist
 from core.redis_repository import RedisRepository
 from customers.db_controller import CustomerDBController
 from customers.models import Customer
@@ -42,6 +43,9 @@ class CustomerService:
             customer = await CustomerDBController.get_customer_by_id(
                 db=db, customer_id=customer_id
             )
+            if not customer:
+                raise NotFoundException
+
             await RedisRepository.set_to_redis(
                 f"customer{customer_id}",
                 jsonable_encoder(customer),
@@ -51,9 +55,22 @@ class CustomerService:
 
     @staticmethod
     @check_admin_manager_permission
+    async def get_customer_by_name(
+            current_user: User, customer_name: str, db: AsyncSession = Depends(get_db)
+    ):
+        customer = await CustomerDBController.get_customer_by_name(db=db, customer_name=customer_name)
+        if not customer:
+            raise NotFoundException
+        return customer
+
+    @staticmethod
+    @check_admin_manager_permission
     async def delete_customer_by_id(
         current_user: User, customer_id: int, db: AsyncSession = Depends(get_db)
     ):
+        customer = await CustomerDBController.get_customer_by_id(db=db, customer_id=customer_id)
+        if not customer:
+            raise NotFoundException
         await RedisRepository.clear_key("customers")
         await RedisRepository.clear_key(f"customer{customer_id}")
         return await CustomerDBController.delete_customer_by_id(
@@ -68,6 +85,9 @@ class CustomerService:
         customer: UpdateCustomer,
         db: AsyncSession = Depends(get_db),
     ):
+        customer = await CustomerDBController.get_customer_by_id(db=db, customer_id=customer_id)
+        if not customer:
+            raise NotFoundException
         await RedisRepository.clear_key("customers")
         await RedisRepository.clear_key(f"customer{customer_id}")
         return await CustomerDBController.update_customer_by_id(
@@ -79,6 +99,9 @@ class CustomerService:
     async def soft_delete_customer(
         current_user: User, customer_id: int, db: AsyncSession = Depends(get_db)
     ):
+        customer = await CustomerDBController.get_customer_by_id(db=db, customer_id=customer_id)
+        if not customer:
+            raise NotFoundException
         await RedisRepository.clear_key("customers")
         await RedisRepository.clear_key(f"customer{customer_id}")
         return await CustomerDBController.soft_delete(customer_id=customer_id, db=db)
@@ -90,6 +113,10 @@ class CustomerService:
         new_customer: CreateCustomer,
         db: AsyncSession = Depends(get_db),
     ):
+        customer = await CustomerDBController.get_customer_by_name(db=db, customer_name=new_customer.customer_name)
+
+        if customer:
+            raise AlreadyExist
         await RedisRepository.clear_key("customers")
         return await CustomerDBController.create_customer(
             new_customer=new_customer, db=db

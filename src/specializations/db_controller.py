@@ -30,6 +30,17 @@ class SpecializationDBController:
             raise DatabaseException(str(e))
 
     @staticmethod
+    async def get_specialization_by_name(db: AsyncSession, specialization_name: str):
+        try:
+            query = select(Specialization).where(
+                Specialization.specialization_name == specialization_name
+            )
+            specialization = await db.execute(query)
+            return specialization.scalar()
+        except Exception as e:
+            raise DatabaseException(str(e))
+
+    @staticmethod
     async def delete_specialization_by_id(db: AsyncSession, specialization_id: int):
         try:
             query = delete(Specialization).where(

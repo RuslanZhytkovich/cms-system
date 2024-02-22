@@ -40,6 +40,19 @@ async def get_customer_by_id(
     )
 
 
+@customer_router.get("/get_by_name/{customer_name}", response_model=ShowCustomer)
+async def get_customer_by_name(
+    customer_name: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(AuthService.get_current_user_from_token),
+):
+
+    return await CustomerService.get_customer_by_name(
+        customer_name=customer_name, db=db, current_user=current_user
+    )
+
+
+
 @customer_router.delete("/delete_by_id/{customer_id}", status_code=status.HTTP_200_OK)
 async def delete_customer_by_id(
     customer_id: int,

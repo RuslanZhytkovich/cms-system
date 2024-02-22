@@ -28,6 +28,18 @@ async def get_specialization_by_id(
         specialization_id=specialization_id, db=db, current_user=current_user
     )
 
+@specialization_router.get(
+    "/get_by_name/{specialization_name}", response_model=ShowSpecialization
+)
+async def get_specialization_by_name(
+    specialization_name: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(AuthService.get_current_user_from_token),
+):
+    return await SpecializationService.get_specialization_by_name(specialization_name=specialization_name, db=db, current_user=current_user
+    )
+
+
 @specialization_router.delete(
     "/delete_by_id/{specialization_id}", status_code=status.HTTP_200_OK
 )

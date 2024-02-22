@@ -1,4 +1,5 @@
 from core.db import get_db
+from core.exceptions import NotFoundException, AlreadyExist
 from core.redis_repository import RedisRepository
 from fastapi import Depends
 from fastapi.encoders import jsonable_encoder
@@ -37,9 +38,9 @@ class ProjectService:
         if cache := await RedisRepository.get_from_redis(f"project{project_id}"):
             return Project(**jsonable_encoder(cache))
         else:
-            project = await ProjectDBController.get_project_by_id(
-                project_id=project_id, db=db
-            )
+            project = await ProjectDBController.get_project_by_id(project_id=project_id, db=db)
+            if not project:
+                raise NotFoundException
             await RedisRepository.set_to_redis(
                 key=f"project{project_id}",
                 value=jsonable_encoder(project),
@@ -49,9 +50,23 @@ class ProjectService:
 
     @staticmethod
     @check_admin_manager_permission
+    async def get_project_by_name(
+            current_user: User, project_name: str, db: AsyncSession = Depends(get_db)
+    ):
+        project = await ProjectDBController.get_project_by_name(project_name=project_name, db=db)
+        if not project:
+            raise NotFoundException
+        return project
+
+    @staticmethod
+    @check_admin_manager_permission
     async def delete_project_by_id(
         current_user: User, project_id: int, db: AsyncSession = Depends(get_db)
     ):
+        project = await ProjectDBController.get_project_by_id(project_id=project_id, db=db)
+        if not project:
+            raise NotFoundException
+
         await RedisRepository.clear_key("projects")
         await RedisRepository.clear_key(f"project{project_id}")
         return await ProjectDBController.delete_project_by_id(
@@ -66,6 +81,9 @@ class ProjectService:
         project: UpdateProject,
         db: AsyncSession = Depends(get_db),
     ):
+        project = await ProjectDBController.get_project_by_id(project_id=project_id, db=db)
+        if not project:
+            raise NotFoundException
         await RedisRepository.clear_key("projects")
         await RedisRepository.clear_key(f"project{project_id}")
         return await ProjectDBController.update_project_by_id(
@@ -77,6 +95,9 @@ class ProjectService:
     async def soft_delete_project(
         current_user: User, project_id: int, db: AsyncSession = Depends(get_db)
     ):
+        project = await ProjectDBController.get_project_by_id(project_id=project_id, db=db)
+        if not project:
+            raise NotFoundException
         await RedisRepository.clear_key("projects")
         await RedisRepository.clear_key(f"project{project_id}")
         return await ProjectDBController.soft_delete(project_id=project_id, db=db)
@@ -88,5 +109,8 @@ class ProjectService:
         new_project: CreateProject,
         db: AsyncSession = Depends(get_db),
     ):
+        project = await ProjectDBController.get_project_by_name(project_name=new_project.project_name, db=db)
+        if project:
+            raise AlreadyExist
         await RedisRepository.clear_key("projects")
         return await ProjectDBController.create_project(new_project=new_project, db=db)
