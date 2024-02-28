@@ -28,6 +28,15 @@ class ReportDBController:
             raise DatabaseException(str(e))
 
     @staticmethod
+    async def get_reports_by_user_id(db: AsyncSession, user_id: int):
+        try:
+            query = select(Report).where(Report.user_id == user_id)
+            report = await db.execute(query)
+            return report.scalars().all()
+        except Exception as e:
+            raise DatabaseException(str(e))
+
+    @staticmethod
     async def delete_report_by_id(db: AsyncSession, report_id: int):
         try:
             query = delete(Report).where(Report.report_id == report_id)
@@ -37,9 +46,13 @@ class ReportDBController:
             raise DatabaseException(str(e))
 
     @staticmethod
-    async def create_report(db: AsyncSession, new_report: CreateReport):
+    async def create_report(db: AsyncSession, new_report: CreateReport, user_id):
         try:
-            query = insert(Report).values(**new_report.dict()).returning(Report)
+            query = (
+                insert(Report)
+                .values(**new_report.dict(), user_id=user_id)
+                .returning(Report)
+            )
             result = await db.execute(query)
             new_report = result.scalar()
             await db.commit()

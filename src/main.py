@@ -23,6 +23,7 @@ app.include_router(customer_router, prefix="/customers", tags=["customers"])
 app.include_router(
     specialization_router, prefix="/specializations", tags=["specializations"]
 )
+
 app.include_router(login_router, prefix="/login", tags=["login"])
 app.include_router(register_router, tags=["register"])
 

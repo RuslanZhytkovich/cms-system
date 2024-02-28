@@ -1,19 +1,14 @@
-import asyncio
-import os
-import time
-from typing import List
 from celery import Celery
 
 
+celery = Celery(
+    "tasks", broker="redis://localhost:6379", backend="redis://redis_cms:6379/0"
+)
 
-
-celery = Celery('tasks', broker='redis://localhost:6379', backend='redis://redis_cms:6379/0')
 
 @celery.task
-def add(x, y):
-    print(x+y)
-    return x + y
-
+def say_hi():
+    print("hi" * 1000)
 
 
 # @celery.task
@@ -40,6 +35,3 @@ def add(x, y):
 #     print('generate_report_task is working properly')
 #
 #
-
-
-

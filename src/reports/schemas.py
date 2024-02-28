@@ -19,8 +19,14 @@ class ShowReport(BaseReport):
     report_id: int
 
 
-class CreateReport(BaseReport):
-    pass
+class CreateReport(BaseModel):
+    date: date
+    hours: float
+    comment: str
+    project_id: int
+
+    class Config:
+        orm_mode = True
 
 
 class UpdateReport(BaseReport):

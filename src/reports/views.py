@@ -4,7 +4,6 @@ from auth.services import AuthService
 from core.db import get_db
 from fastapi import APIRouter
 from fastapi import Depends
-from fastapi import HTTPException
 from reports.schemas import CreateReport
 from reports.schemas import ShowReport
 from reports.schemas import UpdateReport
@@ -12,6 +11,7 @@ from reports.services import ReportService
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from users.models import User
+
 
 report_router = APIRouter()
 
@@ -22,10 +22,7 @@ async def get_all_report(
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
 
-    return await ReportService.get_all_reports_service(
-        db=db, current_user=current_user
-    )
-
+    return await ReportService.get_all_reports_service(db=db, current_user=current_user)
 
 
 @report_router.get("/get_by_id/{report_id}", response_model=ShowReport)
@@ -38,6 +35,15 @@ async def get_report_by_id(
     return await ReportService.get_report_by_id(
         report_id=report_id, db=db, current_user=current_user
     )
+
+
+@report_router.get("/get_my_reports", response_model=List[ShowReport])
+async def get_my_reports(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(AuthService.get_current_user_from_token),
+):
+
+    return await ReportService.get_my_reports(db=db, current_user=current_user)
 
 
 @report_router.delete("/delete_by_id/{report_id}", status_code=status.HTTP_200_OK)
@@ -65,7 +71,6 @@ async def update_report_by_id(
     )
 
 
-
 @report_router.patch("/soft_delete/{report_id}", status_code=status.HTTP_200_OK)
 async def soft_delete_report(
     report_id: int,
@@ -88,4 +93,3 @@ async def create_report(
     return await ReportService.create_report(
         new_report=new_report, db=db, current_user=current_user
     )
-
