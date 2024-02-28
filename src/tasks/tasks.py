@@ -1,9 +1,7 @@
 from celery import Celery
 
 
-celery = Celery(
-    "tasks", broker="redis://localhost:6379", backend="redis://redis_cms:6379/0"
-)
+celery = Celery("tasks", broker="redis://localhost:6379")
 
 
 @celery.task
@@ -19,7 +17,7 @@ def say_hi():
 #
 # @celery.task(queue="q2")
 # def generate_report_task(user_id: int, report_dicts: List[dict]):
-#     directory = 'tasks/files'
+#     directory = 'background-tasks/files'
 #     if not os.path.exists(directory):
 #         os.makedirs(directory)
 #

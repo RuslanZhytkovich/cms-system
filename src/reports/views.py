@@ -10,8 +10,8 @@ from reports.schemas import UpdateReport
 from reports.services import ReportService
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
+from tasks.tasks import say_hi
 from users.models import User
-
 
 report_router = APIRouter()
 
@@ -43,6 +43,7 @@ async def get_my_reports(
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
 
+    say_hi.delay()
     return await ReportService.get_my_reports(db=db, current_user=current_user)
 
 
