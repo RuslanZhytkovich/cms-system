@@ -9,10 +9,12 @@ class RedisRepository:
     __redis = None
 
     @classmethod
-    async def connect_to_redis(cls):
+    async def connect_to_redis(cls, redis_url=None):
         if cls.__redis is None:
+            if redis_url is None:
+                redis_url = SETTINGS.REDIS_URL
             RedisRepository.__redis = await redis.from_url(
-                SETTINGS.REDIS_URL, decode_responses=True
+                redis_url, decode_responses=True
             )
 
     @classmethod
@@ -38,6 +40,7 @@ class RedisRepository:
     @classmethod
     async def clear_key(cls, key):
         try:
+
             await cls.__redis.delete(key)
         except redis.RedisError:
             raise RequestProcessingException

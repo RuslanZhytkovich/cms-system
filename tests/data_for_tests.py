@@ -1,11 +1,8 @@
-from users.enums import RoleEnum
-
 test_check_patch_data = [
     ("admin", {"email": "admin@mail.ru"}, 200),
     ("developer", {"email": "admin@mail.ru"}, 403),
     ("manager", {"email": "admin@mail.ru"}, 403),
 ]
-
 
 
 test_get_all_users_data = [
@@ -119,8 +116,6 @@ test_get_all_customers_by_id_data = [
 ]
 
 
-
-
 test_get_specialization_by_id_data = [
     ("/specializations/get_by_id/1", 403, "developer"),
     ("/specializations/get_by_id/1", 200, "admin"),
@@ -215,7 +210,7 @@ test_soft_delete_projects_data = [
 ]
 
 test_create_report = [
-    ("/reports/create", 403, "developer"),
+    ("/reports/create", 200, "developer"),
     ("/reports/create", 200, "admin"),
     ("/reports/create", 200, "manager"),
 ]
@@ -253,7 +248,7 @@ test_reports_patch_data = [
             "hours": 5,
             "comment": "string",
             "user_id": "eab73dd2-8d2d-434e-9916-6d8608aca8e6",
-            "project_id": 1
+            "project_id": 1,
         },
         200,
     ),
@@ -264,7 +259,7 @@ test_reports_patch_data = [
             "hours": 4,
             "comment": "string",
             "user_id": "eab73dd2-8d2d-434e-9916-6d8608aca8e6",
-            "project_id": 1
+            "project_id": 1,
         },
         403,
     ),
@@ -275,7 +270,7 @@ test_reports_patch_data = [
             "hours": 12,
             "comment": "string",
             "user_id": "eab73dd2-8d2d-434e-9916-6d8608aca8e6",
-            "project_id": 1
+            "project_id": 1,
         },
         200,
     ),
