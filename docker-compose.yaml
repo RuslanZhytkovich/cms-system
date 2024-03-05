@@ -1,0 +1,67 @@
+version: "3.8"
+services:
+  db:
+    container_name: "db"
+    image: postgres:15
+    restart: always
+    command: -p 1221
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    expose:
+      - 1221
+    env_file:
+      - .env
+
+
+
+  redis:
+    image: redis:7
+    container_name: redis
+    command: --port 5370
+    expose:
+      - 5370
+
+
+
+  cms_app:
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: cms_app
+    ports:
+      - "9999:8000"
+    depends_on:
+      - redis
+      - db
+    command: ["commands/entrypoint.sh"]
+
+  celery:
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: celery_app
+    command: ["commands/celery.sh", "celery"]
+    depends_on:
+      - redis
+
+
+  flower:
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: flower_app
+    command: [ "commands/celery.sh", "flower" ]
+    depends_on:
+      - redis
+      - celery
+    ports:
+      - "8888:5555"
+
+
+volumes:
+  cms_app:
