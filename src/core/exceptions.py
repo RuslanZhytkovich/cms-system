@@ -1,6 +1,8 @@
 class AlreadyExist(Exception):
     pass
 
+class UserAlreadyExist(Exception):
+    pass
 
 class NotFoundException(Exception):
     pass

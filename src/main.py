@@ -1,5 +1,7 @@
 import subprocess
 
+from starlette.middleware.cors import CORSMiddleware
+
 from auth.views import login_router
 from auth.views import register_router
 from core.exception_handler import include_exceptions_to_app
@@ -12,6 +14,15 @@ from specializations.views import specialization_router
 from users.views import user_router
 
 app = FastAPI(title="cms-system")  # create instance of the app
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["POST"],
+    allow_headers=["*"],
+)
 
 include_exceptions_to_app(app)
 
