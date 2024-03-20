@@ -40,7 +40,6 @@ class RedisRepository:
     @classmethod
     async def clear_key(cls, key):
         try:
-
             await cls.__redis.delete(key)
         except redis.RedisError:
             raise RequestProcessingException

@@ -65,7 +65,6 @@ async def create(engine):
 @pytest_asyncio.fixture
 async def client(event_loop, create):
     async with AsyncClient(app=app, base_url="http://0.0.0.0:8000") as ac:
-
         await RedisRepository.connect_to_redis("redis://localhost:6379/0")
         yield ac
 
