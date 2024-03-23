@@ -51,7 +51,6 @@ class UserDBController:
             user = await db.execute(query)
             return user.scalar()
         except Exception as e:
-            print('123123123')
             raise DatabaseException(str(e))
 
     @staticmethod
