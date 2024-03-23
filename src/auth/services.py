@@ -27,9 +27,10 @@ class AuthService:
             return
         return user
 
+
     @staticmethod
     async def get_current_user_from_token(
-        token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)
+            token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)
     ):
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -40,10 +41,12 @@ class AuthService:
                 token, SETTINGS.SECRET_KEY, algorithms=[SETTINGS.ALGORITHM]
             )
             email: str = payload.get("sub")
-            if email is None:
+            token_type: str = payload.get("token_type")
+            if email is None or token_type != "access":
                 raise credentials_exception
-        except JWTError:
+        except Exception:
             raise credentials_exception
+
         user = await UserDBController.get_user_by_email(email=email, db=db)
         if user is None:
             raise credentials_exception

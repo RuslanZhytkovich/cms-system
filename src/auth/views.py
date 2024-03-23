@@ -30,11 +30,11 @@ async def login_for_access_token(request: Request, db: AsyncSession = Depends(ge
     refresh_token_expires = timedelta(minutes=SETTINGS.REFRESH_TOKEN_EXPIRE_MINUTES)
 
     access_token = create_access_token(
-        data={"sub": user.email, "other_custom_data": [1, 2, 3, 4]},
+        data={"sub": user.email, "token_type": "access"},
         expires_delta=access_token_expires,
     )
     refresh_token = create_refresh_token(
-        data={"sub": user.email},
+        data={"sub": user.email, "token_type": "refresh"},
         expires_delta=refresh_token_expires,
     )
 
@@ -69,7 +69,7 @@ async def refresh_access_token(refresh_token: str = Form(...), db: AsyncSession 
 
     access_token_expires = timedelta(minutes=SETTINGS.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email, "other_custom_data": [1, 2, 3, 4]},
+        data={"sub": user.email, "token_type": "access"},
         expires_delta=access_token_expires,
     )
 
