@@ -18,10 +18,10 @@ app = FastAPI(title="cms-system")  # create instance of the app
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
-    allow_methods=["POST"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Authorization"],
 )
 
 include_exceptions_to_app(app)
