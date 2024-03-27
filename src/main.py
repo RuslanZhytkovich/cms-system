@@ -46,5 +46,5 @@ async def before_startup():
 
 @app.on_event("startup")
 async def startup_event():
-    await RedisRepository.connect_to_redis("redis://localhost:6379/0")
+    await RedisRepository.connect_to_redis()
 
