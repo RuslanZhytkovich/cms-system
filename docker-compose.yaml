@@ -26,7 +26,7 @@ services:
       - .env
     container_name: cms_app
     ports:
-      - "9999:8000"
+      - "8000:8000"
     depends_on:
       - redis
       - db
