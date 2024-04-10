@@ -14,7 +14,6 @@ from utils.permissions import check_admin_manager_permission
 
 class ProjectService:
     @staticmethod
-    @check_admin_manager_permission
     async def get_all_projects_service(
         current_user: User, db: AsyncSession
     ):
