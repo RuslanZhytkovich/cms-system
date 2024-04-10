@@ -31,7 +31,6 @@ class ProjectService:
             return projects_data
 
     @staticmethod
-    @check_admin_manager_permission
     async def get_project_by_id(
         current_user: User, project_id: int, db: AsyncSession
     ):
@@ -49,7 +48,6 @@ class ProjectService:
             return project
 
     @staticmethod
-    @check_admin_manager_permission
     async def get_project_by_name(
             current_user: User, project_name: str, db: AsyncSession
     ):
