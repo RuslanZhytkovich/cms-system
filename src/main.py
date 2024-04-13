@@ -1,7 +1,5 @@
 import subprocess
 
-from starlette.middleware.cors import CORSMiddleware
-
 from auth.views import login_router
 from auth.views import register_router
 from core.exception_handler import include_exceptions_to_app
@@ -11,6 +9,7 @@ from fastapi import FastAPI
 from projects.views import project_router
 from reports.views import report_router
 from specializations.views import specialization_router
+from starlette.middleware.cors import CORSMiddleware
 from users.views import user_router
 
 app = FastAPI(title="cms-system")  # create instance of the app
@@ -47,4 +46,3 @@ async def before_startup():
 @app.on_event("startup")
 async def startup_event():
     await RedisRepository.connect_to_redis()
-

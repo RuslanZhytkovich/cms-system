@@ -8,7 +8,6 @@ from customers.schemas import UpdateCustomer
 from customers.services import CustomerService
 from fastapi import APIRouter
 from fastapi import Depends
-from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from users.models import User
@@ -25,7 +24,6 @@ async def get_all_customers(
     return await CustomerService.get_all_customers_service(
         db=db, current_user=current_user
     )
-
 
 
 @customer_router.get("/get_by_id/{customer_id}", response_model=ShowCustomer)
@@ -52,7 +50,6 @@ async def get_customer_by_name(
     )
 
 
-
 @customer_router.delete("/delete_by_id/{customer_id}", status_code=status.HTTP_200_OK)
 async def delete_customer_by_id(
     customer_id: int,
@@ -77,7 +74,6 @@ async def update_customer_by_id(
     )
 
 
-
 @customer_router.patch("/soft_delete/{customer_id}", status_code=status.HTTP_200_OK)
 async def soft_delete_customer(
     customer_id: int,
@@ -88,6 +84,7 @@ async def soft_delete_customer(
     return await CustomerService.soft_delete_customer(
         customer_id=customer_id, db=db, current_user=current_user
     )
+
 
 @customer_router.post("/create", response_model=ShowCustomer)
 async def create_customer(

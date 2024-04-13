@@ -2,7 +2,6 @@ from core.exceptions import DatabaseException
 from customers.models import Customer
 from customers.schemas import CreateCustomer
 from customers.schemas import UpdateCustomer
-from sqlalchemy import delete
 from sqlalchemy import insert
 from sqlalchemy import select
 from sqlalchemy import update
@@ -13,7 +12,9 @@ class CustomerDBController:
     @staticmethod
     async def get_all_customers(db: AsyncSession):
         try:
-            customers = await db.execute(select(Customer))
+            customers = await db.execute(
+                select(Customer).where(Customer.is_deleted == False)
+            )
             return customers.scalars().all()
         except Exception as e:
             raise DatabaseException(str(e))
@@ -27,7 +28,6 @@ class CustomerDBController:
         except Exception as e:
             raise DatabaseException(str(e))
 
-
     @staticmethod
     async def get_customer_by_name(db: AsyncSession, customer_name: str):
         try:
@@ -37,12 +37,14 @@ class CustomerDBController:
         except Exception as e:
             raise DatabaseException(str(e))
 
-
-
     @staticmethod
     async def delete_customer_by_id(db: AsyncSession, customer_id: int):
         try:
-            query = delete(Customer).where(Customer.customer_id == customer_id)
+            query = (
+                update(Customer)
+                .where(Customer.customer_id == customer_id)
+                .values(is_deleted=True)
+            )
             await db.execute(query)
             await db.commit()
         except Exception as e:

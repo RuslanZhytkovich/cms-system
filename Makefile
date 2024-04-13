@@ -9,7 +9,7 @@ up:
 
 
 down:
-	docker-compose -f docker-compose-tests.yaml down --volumes --rmi all --remove-orphans
+	docker-compose -f docker-compose-tests.yaml down --rmi all --remove-orphans
 	docker network prune --force
 
 
@@ -17,4 +17,3 @@ restart:
 	docker-compose -f docker-compose-tests.yaml down --rmi all --remove-orphans
 	docker network prune --force
 	docker-compose -f docker-compose.yaml up -d
-
