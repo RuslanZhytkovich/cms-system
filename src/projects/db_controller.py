@@ -9,11 +9,29 @@ from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
+from core.db import AsyncSession
+from core.exceptions import DatabaseException
+from projects.models import Project
+from sqlalchemy import select
+
+
+from core.db import AsyncSession
+from core.exceptions import DatabaseException
+from projects.models import Project
+from customers.models import Customer
+from sqlalchemy import select
+
+
 class ProjectDBController:
     @staticmethod
     async def get_all_projects(db: AsyncSession):
         try:
-            projects = await db.execute(select(Project))
+            projects = await db.execute(
+                select(Project)
+                .join(Customer)
+                .filter(Project.is_deleted == False)
+                .filter(Customer.is_deleted == False)
+            )
             return projects.scalars().all()
         except Exception as e:
             raise DatabaseException(str(e))
@@ -21,18 +39,28 @@ class ProjectDBController:
     @staticmethod
     async def get_project_by_id(db: AsyncSession, project_id: int):
         try:
-            query = select(Project).where(Project.project_id == project_id)
-            customer = await db.execute(query)
-            return customer.scalar()
+            query = (
+                select(Project)
+                .join(Customer)
+                .where(
+                    (Project.project_id == project_id) & (Project.is_deleted == False) & (Customer.is_deleted == False))
+            )
+            project = await db.execute(query)
+            return project.scalar()
         except Exception as e:
             raise DatabaseException(str(e))
 
     @staticmethod
     async def get_project_by_name(db: AsyncSession, project_name: str):
         try:
-            query = select(Project).where(Project.project_name == project_name)
-            customer = await db.execute(query)
-            return customer.scalar()
+            query = (
+                select(Project)
+                .join(Customer)
+                .where((Project.project_name == project_name) & (Project.is_deleted == False) & (
+                            Customer.is_deleted == False))
+            )
+            project = await db.execute(query)
+            return project.scalar()
         except Exception as e:
             raise DatabaseException(str(e))
 

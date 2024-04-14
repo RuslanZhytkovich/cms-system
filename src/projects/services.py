@@ -65,6 +65,7 @@ class ProjectService:
             raise NotFoundException
 
         await RedisRepository.clear_key("projects")
+        await RedisRepository.clear_key("reports")
         await RedisRepository.clear_key(f"project{project_id}")
         return await ProjectDBController.delete_project_by_id(
             project_id=project_id, db=db
@@ -82,6 +83,7 @@ class ProjectService:
         if not project_from_db:
             raise NotFoundException
         await RedisRepository.clear_key("projects")
+        await RedisRepository.clear_key("reports")
         await RedisRepository.clear_key(f"project{project_id}")
         return await ProjectDBController.update_project_by_id(
             project_id=project_id, project=project, db=db
@@ -96,6 +98,7 @@ class ProjectService:
         if not project:
             raise NotFoundException
         await RedisRepository.clear_key("projects")
+        await RedisRepository.clear_key("reports")
         await RedisRepository.clear_key(f"project{project_id}")
         return await ProjectDBController.soft_delete(project_id=project_id, db=db)
 

@@ -89,6 +89,7 @@ class CustomerService:
         if not customer_from_db:
             raise NotFoundException
         await RedisRepository.clear_key("customers")
+        await RedisRepository.clear_key("projects")
         await RedisRepository.clear_key(f"customer{customer_id}")
         return await CustomerDBController.update_customer_by_id(
             customer_id=customer_id, customer=customer, db=db
@@ -103,6 +104,7 @@ class CustomerService:
         if not customer:
             raise NotFoundException
         await RedisRepository.clear_key("customers")
+        await RedisRepository.clear_key("projects")
         await RedisRepository.clear_key(f"customer{customer_id}")
         return await CustomerDBController.soft_delete(customer_id=customer_id, db=db)
 

@@ -78,6 +78,7 @@ class SpecializationService:
         if not specialization:
             raise NotFoundException
         await RedisRepository.clear_key("specializations")
+        await RedisRepository.clear_key("users")
         await RedisRepository.clear_key(f"specialization{specialization_id}")
         return await SpecializationDBController.delete_specialization_by_id(
             specialization_id=specialization_id, db=db
@@ -96,6 +97,7 @@ class SpecializationService:
         if not specialization_from_db:
             raise NotFoundException
         await RedisRepository.clear_key("specializations")
+        await RedisRepository.clear_key("users")
         await RedisRepository.clear_key(f"specialization{specialization_id}")
         return await SpecializationDBController.update_specialization_by_id(
             specialization_id=specialization_id, specialization=specialization, db=db
@@ -111,6 +113,7 @@ class SpecializationService:
         if not specialization:
             raise NotFoundException
         await RedisRepository.clear_key("specializations")
+        await RedisRepository.clear_key("users")
         await RedisRepository.clear_key(f"specialization{specialization_id}")
         return await SpecializationDBController.soft_delete(
             specialization_id=specialization_id, db=db
