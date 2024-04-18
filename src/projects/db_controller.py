@@ -1,20 +1,8 @@
-from core.exceptions import DatabaseException
-from projects.models import Project
 from projects.schemas import CreateProject
 from projects.schemas import UpdateProject
 from sqlalchemy import delete
 from sqlalchemy import insert
-from sqlalchemy import select
 from sqlalchemy import update
-from sqlalchemy.ext.asyncio import AsyncSession
-
-
-from core.db import AsyncSession
-from core.exceptions import DatabaseException
-from projects.models import Project
-from sqlalchemy import select
-
-
 from core.db import AsyncSession
 from core.exceptions import DatabaseException
 from projects.models import Project

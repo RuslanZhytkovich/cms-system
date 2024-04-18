@@ -10,6 +10,7 @@ class BaseReport(BaseModel):
     comment: str
     user_id: uuid.UUID
     project_id: int
+    is_deleted: bool = False
 
     class Config:
         orm_mode = True

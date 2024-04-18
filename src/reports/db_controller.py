@@ -1,4 +1,5 @@
 from core.exceptions import DatabaseException
+from projects.models import Project
 from reports.models import Report
 from reports.schemas import CreateReport
 from reports.schemas import UpdateReport
@@ -13,7 +14,12 @@ class ReportDBController:
     @staticmethod
     async def get_all_reports(db: AsyncSession):
         try:
-            reports = await db.execute(select(Report))
+            reports = await db.execute(
+                select(Report)
+                .join(Project)
+                .filter(Project.is_deleted == False)
+                .filter(Report.is_deleted == False)
+            )
             return reports.scalars().all()
         except Exception as e:
             raise DatabaseException(str(e))
@@ -21,16 +27,27 @@ class ReportDBController:
     @staticmethod
     async def get_report_by_id(db: AsyncSession, report_id: int):
         try:
-            query = select(Report).where(Report.report_id == report_id)
-            report = await db.execute(query)
-            return report.scalar()
+            query = (
+                select(Report)
+                .join(Project)
+                .where(
+                    (Report.report_id == report_id) & (Project.is_deleted == False) & (Report.is_deleted == False))
+            )
+            project = await db.execute(query)
+            return project.scalar()
         except Exception as e:
             raise DatabaseException(str(e))
 
     @staticmethod
     async def get_reports_by_user_id(db: AsyncSession, user_id: int):
         try:
-            query = select(Report).where(Report.user_id == user_id)
+            query = (
+                select(Report)
+                .join(Project)
+                .where(
+                    (Report.user_id == user_id) & (Report.is_deleted == False) & (Project.is_deleted == False)
+                )
+            )
             report = await db.execute(query)
             return report.scalars().all()
         except Exception as e:
