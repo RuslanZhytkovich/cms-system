@@ -1,4 +1,5 @@
 from core.exceptions import DatabaseException
+from customers.models import Customer
 from projects.models import Project
 from reports.models import Report
 from reports.schemas import CreateReport
@@ -44,8 +45,10 @@ class ReportDBController:
             query = (
                 select(Report)
                 .join(Project)
+                .join(Customer)
                 .where(
-                    (Report.user_id == user_id) & (Report.is_deleted == False) & (Project.is_deleted == False)
+                    (Report.user_id == user_id) & (Report.is_deleted == False) &
+                    (Project.is_deleted == False) & (Customer.is_deleted == False)
                 )
             )
             report = await db.execute(query)

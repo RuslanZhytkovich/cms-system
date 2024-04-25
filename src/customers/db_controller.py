@@ -22,7 +22,7 @@ class CustomerDBController:
     @staticmethod
     async def get_customer_by_id(db: AsyncSession, customer_id: int):
         try:
-            query = select(Customer).where(Customer.customer_id == customer_id)
+            query = select(Customer).where((Customer.customer_id == customer_id)  & (Customer.is_deleted == False))
             customer = await db.execute(query)
             return customer.scalar()
         except Exception as e:
@@ -31,7 +31,7 @@ class CustomerDBController:
     @staticmethod
     async def get_customer_by_name(db: AsyncSession, customer_name: str):
         try:
-            query = select(Customer).where(Customer.customer_name == customer_name)
+            query = select(Customer).where((Customer.customer_name == customer_name)  & (Customer.is_deleted == False))
             customer = await db.execute(query)
             return customer.scalar()
         except Exception as e:

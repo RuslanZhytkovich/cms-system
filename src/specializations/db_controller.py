@@ -13,7 +13,9 @@ class SpecializationDBController:
     @staticmethod
     async def get_all_specializations(db: AsyncSession):
         try:
-            specialization = await db.execute(select(Specialization))
+            specialization = await db.execute(
+                select(Specialization).where(Specialization.is_deleted == False)
+            )
             return specialization.scalars().all()
         except Exception as e:
             raise DatabaseException(str(e))
@@ -21,9 +23,7 @@ class SpecializationDBController:
     @staticmethod
     async def get_specialization_by_id(db: AsyncSession, specialization_id: int):
         try:
-            query = select(Specialization).where(
-                Specialization.specialization_id == specialization_id
-            )
+            query = select(Specialization).where((Specialization.specialization_id == specialization_id) & (Specialization.is_deleted == False))
             specialization = await db.execute(query)
             return specialization.scalar()
         except Exception as e:
@@ -32,9 +32,9 @@ class SpecializationDBController:
     @staticmethod
     async def get_specialization_by_name(db: AsyncSession, specialization_name: str):
         try:
-            query = select(Specialization).where(
+            query = select(Specialization).where((
                 Specialization.specialization_name == specialization_name
-            )
+            )  & (Specialization.is_deleted == False))
             specialization = await db.execute(query)
             return specialization.scalar()
         except Exception as e:
