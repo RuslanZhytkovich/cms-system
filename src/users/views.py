@@ -7,7 +7,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from users.models import User
-from users.schemas import CreateUserFullData, RegisterUser
+from users.schemas import CreateUserFullData, RegisterUser, FillInProfile
 from users.schemas import ShowUser
 from users.schemas import UpdateUser
 from users.services import UserService
@@ -64,6 +64,18 @@ async def update_user_by_id(
     current_user: User = Depends(AuthService.get_current_user_from_token),
 ):
     return await UserService.update_user_by_id(
+        user_id=user_id, user_to_update=user, db=db, current_user=current_user
+    )
+
+
+@user_router.patch("/profile/update/{user_id}")
+async def update_profile(
+    user_id: uuid.UUID,
+    user: FillInProfile,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(AuthService.get_current_user_from_token),
+):
+    return await UserService.update_user_profile(
         user_id=user_id, user_to_update=user, db=db, current_user=current_user
     )
 

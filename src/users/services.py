@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from users.db_controller import UserDBController
 from users.models import User
-from users.schemas import CreateUserFullData
+from users.schemas import CreateUserFullData, FillInProfile
 from users.schemas import UpdateUser
 from utils.hasher import Hasher
 from utils.permissions import check_admin_manager_permission
@@ -85,6 +85,23 @@ class UserService:
             raise NotFoundException
         await RedisRepository.clear_key("users")
         return await UserDBController.update_user_by_id(
+            user_id=user_id, user=user_to_update, db=db
+        )
+
+    @staticmethod
+    async def update_user_profile(
+            current_user: User,
+            user_id: uuid.UUID,
+            user_to_update: FillInProfile,
+            db: AsyncSession,
+    ):
+
+        if current_user.user_id != user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden."
+            )
+        await RedisRepository.clear_key("users")
+        return await UserDBController.update_profile_info(
             user_id=user_id, user=user_to_update, db=db
         )
 

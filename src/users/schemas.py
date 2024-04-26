@@ -37,6 +37,18 @@ class CreateUserFullData(BaseUser):
     specialization_id: int = 1
 
 
+class FillInProfile(BaseModel):
+    name: Optional[str] = None
+    last_name: Optional[str] = None
+    telegram: Optional[str] = None
+    phone_number: Optional[str] = None
+    on_bench: Optional[bool] = None
+    specialization_id: Optional[int] = None
+
+    class Config:
+        orm_mode = True
+
+
 class UpdateUser(CreateUserFullData):
     pass
 

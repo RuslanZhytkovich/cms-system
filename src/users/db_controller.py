@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from users.enums import RoleEnum
 from users.models import User
-from users.schemas import CreateUserFullData, RegisterUser
+from users.schemas import CreateUserFullData, RegisterUser, FillInProfile
 from users.schemas import UpdateUser
 
 
@@ -64,6 +64,22 @@ class UserDBController:
 
     @staticmethod
     async def update_user_by_id(user_id: uuid.UUID, user: UpdateUser, db: AsyncSession):
+        try:
+            query = (
+                update(User)
+                .where(User.user_id == user_id)
+                .values(**user.dict(exclude_none=True))
+                .returning(User)
+            )
+            result = await db.execute(query)
+            updated = result.scalar()
+            await db.commit()
+            return updated
+        except Exception as e:
+            raise DatabaseException(str(e))
+
+    @staticmethod
+    async def update_profile_info(user_id: uuid.UUID, user: FillInProfile, db: AsyncSession):
         try:
             query = (
                 update(User)
