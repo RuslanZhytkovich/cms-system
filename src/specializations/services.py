@@ -14,7 +14,6 @@ from utils.permissions import check_admin_manager_permission
 
 class SpecializationService:
     @staticmethod
-    @check_admin_manager_permission
     async def get_all_specializations_service(
         current_user: User, db: AsyncSession
     ):
@@ -38,7 +37,6 @@ class SpecializationService:
             return specializations_data
 
     @staticmethod
-    @check_admin_manager_permission
     async def get_specialization_by_id(
         current_user: User, specialization_id: int, db: AsyncSession
     ):
@@ -60,7 +58,6 @@ class SpecializationService:
             return specialization
 
     @staticmethod
-    @check_admin_manager_permission
     async def get_specialization_by_name(
             current_user: User, specialization_name: str, db: AsyncSession
     ):
