@@ -49,8 +49,13 @@ class FillInProfile(BaseModel):
         orm_mode = True
 
 
-class UpdateUser(CreateUserFullData):
-    pass
+class UpdateUser(BaseModel):
+    name: Optional[str] = None
+    last_name: Optional[str] = None
+    role: Optional[RoleEnum] = None
+
+    class Config:
+        orm_mode = True
 
 
 class ShowUser(CreateUserFullData):
